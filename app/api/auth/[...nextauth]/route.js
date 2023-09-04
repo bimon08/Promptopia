@@ -11,11 +11,9 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-
-  // Callbacks
   callbacks: {
     async session({ session }) {
-      // Store the user id from MongoDB to session
+      // store the user id from MongoDB to session
       const sessionUser = await User.findOne({ email: session.user.email });
       session.user.id = sessionUser._id.toString();
 
@@ -23,29 +21,23 @@ const handler = NextAuth({
     },
     async signIn({ account, profile, user, credentials }) {
       try {
-        console.log("Connecting to MongoDB...");
         await connectToDB();
 
-        // Check if the user already exists
+        // check if user already exists
         const userExists = await User.findOne({ email: profile.email });
 
-        // If not, create a new document and save the user in MongoDB
+        // if not, create a new document and save user in MongoDB
         if (!userExists) {
           await User.create({
             email: profile.email,
             username: profile.name.replace(" ", "").toLowerCase(),
             image: profile.picture,
-            // Add a default password or omit this field based on your requirements
-            // password: "default_password", // Change this to an appropriate default password
           });
         }
 
         return true;
       } catch (error) {
-        console.log(
-          "Error checking if user exists or creating user: ",
-          error.message,
-        );
+        console.log("Error checking if user exists: ", error.message);
         return false;
       }
     },

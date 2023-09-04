@@ -31,17 +31,30 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
         </label>
         <label>
           <span className="font-satoshi text-base font-semibold text-gray-700">
-            Tag
-            <span>(#product, #webdevelopment, #design, etc.)</span>
+            Tag <span>(#product, #webdevelopment, #design, etc.)</span>
           </span>
 
-          <inpur
-            value={post.prompt}
-            onChange={(e) => setPost({ ...post, prompt: e.target.value })}
-            placeholder="Write your AI prompt here"
-            className="form_textarea"
-    />
+          <input
+            value={post.tag}
+            onChange={(e) => setPost({ ...post, tag: e.target.value })}
+            placeholder="#tag"
+            required
+            className="form_input"
+          />
         </label>
+
+        <div className="flex-end mx-3 mb-5 gap-4 ">
+          <Link href="/" className="text-sm text-gray-500">
+            Cancel{" "}
+          </Link>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="rounded-full bg-primary-orange px-5 py-1.5 text-sm text-white"
+          >
+            {submitting ? `${type}...` : type}
+          </button>
+        </div>
       </form>
     </section>
   );

@@ -2,17 +2,46 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import Form from "@components/Form";
 
 const CreatePrompt = () => {
-  const [submitting, setSubmitting] = useState(false);
-  const [post, setPost] = useState({
-    prompt: "",
-    tags: "",
-  });
-  const createPrompt = async (e) => {};
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const [submitting, setIsSubmitting] = useState(false);
+  const [post, setPost] = useState({ prompt: "", tag: "" });
+
+  const createPrompt = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      console.log("Sending prompt creation request...");
+
+      const response = await fetch("/api/prompt/new", {
+        method: "POST",
+        body: JSON.stringify({
+          prompt: post.prompt,
+          userId: session?.user.id,
+          tag: post.tag,
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Prompt creation successful. Redirecting to home page...");
+        router.push("/");
+      }
+      // } else {
+      //   console.error("Prompt creation failed. Server returned an error.");
+      // }
+    } catch (error) {
+      console.error("An error occurred during prompt creation:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Form

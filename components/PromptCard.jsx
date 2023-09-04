@@ -1,9 +1,60 @@
-import React from 'react'
+import { useState } from "react";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { useRouter, usePathname } from "next/navigation";
 
-const PromptCard = () => {
+const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
+  // console.log("post.creator:", post.creator); // Add this console log to check the creator object.
+  const [copied, setCopied] = useState("");
+  const handleCopy = () => {
+    setCopied(post.prompt);
+    navigator.clipboard.writeText(post.prompt);
+    setTimeout(() => setCopied(""), 3000);
+  };
+
   return (
-    <div>PromptCard</div>
-  )
-}
+    <div className="prompt_card">
+      <div className="flex items-start justify-between gap-5">
+        <div className="flex flex-1 cursor-pointer items-center justify-start gap-3">
+          <Image
+            src={post.creator.image}
+            alt="user_image"
+            width={40}
+            height={40}
+            className="rounded-full object-contain"
+          />
 
-export default PromptCard
+          <div className="flex flex-col">
+            <h3 className="font-poppins  font-semibold text-gray-900">
+              {post.creator.username}
+            </h3>
+            <p className="font-inter text-sm text-gray-500">
+              {post.creator.email}
+            </p>
+          </div>
+        </div>
+        <div className="copy_btn" onClick={handleCopy}>
+          <Image
+            src={
+              copied === post.prompt
+                ? "/assets/icons/tick.svg"
+                : "/assets/icons/copy.svg"
+            }
+            alt="edit"
+            width={12}
+            height={12}
+          />
+        </div>
+      </div>
+      <p className="font-poppins my-4  text-sm text-gray-700">{post.prompt}</p>
+      <p
+        className="blue_gradient cursor-pointer font-inter text-sm"
+        onClick={() => handleTagClick && handleTagClick(post.tag)}
+      >
+        {post.tag}
+      </p>
+    </div>
+  );
+};
+
+export default PromptCard;
