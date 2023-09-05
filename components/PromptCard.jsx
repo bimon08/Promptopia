@@ -1,24 +1,38 @@
+"use client";
+
 import { useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
+const PromptCard = ({ post, handleEdit, handleDelete, handleTagClick }) => {
   const { data: session } = useSession();
-  const pathname = usePathname();
+  const pathName = usePathname();
   const router = useRouter();
 
   const [copied, setCopied] = useState("");
+
+  const handleProfileClick = () => {
+    console.log(post);
+
+    if (post.creator._id === session?.user.id) return router.push("/profile");
+
+    router.push(`/profile/${post.creator._id}?name=${post.creator.username}`);
+  };
+
   const handleCopy = () => {
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
-    setTimeout(() => setCopied(""), 3000);
+    setTimeout(() => setCopied(false), 3000);
   };
 
   return (
     <div className="prompt_card">
       <div className="flex items-start justify-between gap-5">
-        <div className="flex flex-1 cursor-pointer items-center justify-start gap-3">
+        <div
+          className="flex flex-1 cursor-pointer items-center justify-start gap-3"
+          onClick={handleProfileClick}
+        >
           <Image
             src={post.creator.image}
             alt="user_image"
@@ -28,7 +42,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
           />
 
           <div className="flex flex-col">
-            <h3 className="font-poppins  font-semibold text-gray-900">
+            <h3 className="font-satoshi font-semibold text-gray-900">
               {post.creator.username}
             </h3>
             <p className="font-inter text-sm text-gray-500">
@@ -36,6 +50,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
             </p>
           </div>
         </div>
+
         <div className="copy_btn" onClick={handleCopy}>
           <Image
             src={
@@ -43,22 +58,23 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
                 ? "/assets/icons/tick.svg"
                 : "/assets/icons/copy.svg"
             }
-            alt="edit"
+            alt={copied === post.prompt ? "tick_icon" : "copy_icon"}
             width={12}
             height={12}
           />
         </div>
       </div>
-      <p className="font-poppins my-4  text-sm text-gray-700">{post.prompt}</p>
+
+      <p className="my-4 font-satoshi text-sm text-gray-700">{post.prompt}</p>
       <p
         className="blue_gradient cursor-pointer font-inter text-sm"
         onClick={() => handleTagClick && handleTagClick(post.tag)}
       >
-        {post.tag}
+        #{post.tag}
       </p>
 
-      {session?.user.id === post.creator._id && pathname === "/profile" && (
-        <div className=" flex-center mt-5 gap-4 border-t border-gray-100 pt-3">
+      {session?.user.id === post.creator._id && pathName === "/profile" && (
+        <div className="flex-center mt-5 gap-4 border-t border-gray-100 pt-3">
           <p
             className="green_gradient cursor-pointer font-inter text-sm"
             onClick={handleEdit}
