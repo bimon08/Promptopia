@@ -3,9 +3,11 @@ import Nav from "@components/Nav";
 import Provider from "@components/Provider";
 
 export const metadata = {
-  title: "Promptopia",
-  description: "A place to get your next prompt",
+  title: "Build and Grow Together",
+  description:
+    "A platform for mutual upbuilding and inspiration from the Bible.",
 };
+
 
 const RootLayout = ({ children }) => {
   return (
