@@ -49,7 +49,9 @@ const Nav = () => {
 
             <button
               type="button"
-              onClick={async () => await signOut().then(() => router.push("/"))}
+              onClick={async () =>
+                await signOut().then(() => router.replace("/"))
+              }
               className="outline_btn"
             >
               Sign Out
@@ -118,7 +120,7 @@ const Nav = () => {
                   type="button"
                   onClick={async () => {
                     setToggleDropdown(false);
-                    await signOut().then(() => router.push("/"));
+                    await signOut().then(() => router.replace("/"));
                   }}
                   className="black_btn mt-5 w-full"
                 >
