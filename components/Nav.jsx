@@ -23,9 +23,7 @@ const Nav = () => {
   useEffect(() => {
     getProvider();
   }, []);
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
+  
   return (
     <nav className="flex-between mb-16 w-full pt-3">
       <Link href="/" className="flex-center flex gap-2">
@@ -41,12 +39,11 @@ const Nav = () => {
 
       {/* Desktop Navigation */}
       <div className="hidden sm:flex">
-        {session?.user ? (
+        {status === "authenticated" && status !== "loading" ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
             </Link>
-
             <button
               type="button"
               onClick={async () =>
@@ -89,7 +86,7 @@ const Nav = () => {
 
       {/* Mobile Navigation */}
       <div className="relative flex sm:hidden">
-        {session?.user ? (
+        {status === "authenticated" && status !== "loading" ? (
           <div className="flex">
             <Image
               src={session?.user.image}
