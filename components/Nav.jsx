@@ -4,15 +4,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
-import { Toaster, toast } from "sonner";
 import { useRouter } from "next/navigation";
 const Nav = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
-  async function getProvider(params) {
+  async function getProvider() {
     try {
       const res = await getProviders();
       if (!res) return;
@@ -24,6 +23,9 @@ const Nav = () => {
   useEffect(() => {
     getProvider();
   }, []);
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
   return (
     <nav className="flex-between mb-16 w-full pt-3">
       <Link href="/" className="flex-center flex gap-2">
@@ -114,9 +116,9 @@ const Nav = () => {
                 </Link>
                 <button
                   type="button"
-                  onClick={() => {
+                  onClick={async () => {
                     setToggleDropdown(false);
-                    signOut();
+                    await signOut().then(() => router.push("/"));
                   }}
                   className="black_btn mt-5 w-full"
                 >
