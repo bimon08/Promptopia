@@ -47,7 +47,7 @@ const Nav = () => {
 
             <button
               type="button"
-              onClick={async () => await signOut()}
+              onClick={async () => await signOut().then(() => router.push("/"))}
               className="outline_btn"
             >
               Sign Out
