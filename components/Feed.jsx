@@ -43,7 +43,7 @@ const Feed = () => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
     return allPosts.filter(
       (item) =>
-        regex.test(item.creator.username) ||
+        regex.test(item.creator?.username) ||
         regex.test(item.tag) ||
         regex.test(item.prompt),
     );
@@ -83,7 +83,7 @@ const Feed = () => {
       </form>
 
       {/* All Prompts */}
-      {searchText && allPosts ? (
+      {searchText ? (
         <PromptCardList
           data={searchedResults}
           handleTagClick={handleTagClick}
