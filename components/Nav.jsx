@@ -12,7 +12,6 @@ const Nav = () => {
 
   useEffect(() => {
     (async () => {
-      console.log(session);
       try {
         const res = await getProviders();
         setProviders(res);
@@ -54,6 +53,7 @@ const Nav = () => {
                 height={37}
                 className="rounded-full"
                 alt="profile"
+                onClick={() => setToggleDropdown(!toggleDropdown)}
               />
             </Link>
           </div>
