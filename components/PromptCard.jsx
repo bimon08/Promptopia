@@ -25,6 +25,9 @@ const PromptCard = ({ post, handleEdit, handleDelete, handleTagClick }) => {
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(false), 3000);
   };
+  if (session === undefined) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="prompt_card">
@@ -34,7 +37,7 @@ const PromptCard = ({ post, handleEdit, handleDelete, handleTagClick }) => {
           onClick={handleProfileClick}
         >
           <Image
-            src={post.creator.image}
+            src={post.creator?.image}
             alt="user_image"
             width={40}
             height={40}
