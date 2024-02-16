@@ -29,7 +29,9 @@ const Feed = () => {
   const fetchPosts = async () => {
     const response = await fetch("/api/prompt");
     const data = await response.json();
-
+    if (!data) {
+      setAllPosts([]);
+    }
     setAllPosts(data);
   };
 
@@ -81,7 +83,7 @@ const Feed = () => {
       </form>
 
       {/* All Prompts */}
-      {searchText ? (
+      {searchText && allPosts ? (
         <PromptCardList
           data={searchedResults}
           handleTagClick={handleTagClick}
