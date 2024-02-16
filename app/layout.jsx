@@ -1,6 +1,7 @@
 import "@styles/globals.css";
 import Nav from "@components/Nav";
 import Provider from "@components/Provider";
+import { Toaster, toast } from 'sonner'
 
 export const metadata = {
   title: "Build and Grow Together",
@@ -20,6 +21,7 @@ const RootLayout = ({ children }) => {
 
           <main className="app">{children}</main>
         </Provider>
+   <Toaster />
       </body>
     </html>
   );
