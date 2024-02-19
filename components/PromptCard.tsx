@@ -12,8 +12,9 @@ type PostType = {
     email: string;
     image: string;
   };
-  prompt: any;
+  prompt: string;
 };
+
 type PromptCardProps = {
   post: PostType;
   handleEdit: () => void;
@@ -29,12 +30,9 @@ const PromptCard = ({
   const { data: session } = useSession();
   const pathName = usePathname();
   const router = useRouter();
-
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<string>();
 
   const handleProfileClick = () => {
-    console.log(post);
-
     if (post.creator._id === session?.user) return router.push("/profile");
 
     router.push(`/profile/${post.creator?._id}?name=${post.creator?.username}`);
@@ -43,7 +41,7 @@ const PromptCard = ({
   const handleCopy = () => {
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
-    setTimeout(() => setCopied(false), 3000);
+    setTimeout(() => setCopied(""), 3000);
   };
 
   return (
