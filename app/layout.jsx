@@ -21,7 +21,7 @@ const RootLayout = ({ children }) => {
 
           <main className="app">{children}</main>
         </Provider>
-   <Toaster />
+        <Toaster />
       </body>
     </html>
   );
