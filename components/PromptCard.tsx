@@ -4,11 +4,21 @@ import { useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+type PostType = {
+  tag: string;
+  creator: {
+    _id: string;
+    username: string;
+    email: string;
+    image: string;
+  };
+  prompt: any;
+};
 type PromptCardProps = {
-  post: any;
-  handleEdit: any;
-  handleDelete: any;
-  handleTagClick: any;
+  post: PostType;
+  handleEdit: () => void;
+  handleDelete: () => void;
+  handleTagClick: (postTag: string) => void;
 };
 const PromptCard = ({
   post,

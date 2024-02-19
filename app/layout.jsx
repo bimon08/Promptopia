@@ -1,14 +1,13 @@
-import "@styles/globals.css";
+import "../styles/globals.css";
 import Nav from "@components/Nav";
 import Provider from "@components/Provider";
-import { Toaster, toast } from 'sonner'
+import { Toaster, toast } from "sonner";
 
 export const metadata = {
   title: "Build and Grow Together",
   description:
     "A platform for mutual upbuilding and inspiration from the Bible.",
 };
-
 
 const RootLayout = ({ children }) => {
   return (

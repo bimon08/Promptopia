@@ -29,7 +29,10 @@
       }
     ],
     "paths": {
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/*"],
+      "@components/*": ["./components/*"],
+      "@models/*": ["./models/*"],
+      "@utils/*": ["./utils/*"]
     }
   },
   "include": [
