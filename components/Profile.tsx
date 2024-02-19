@@ -1,4 +1,15 @@
 import PromptCard from "./PromptCard";
+import { PostType } from "./Type";
+
+type ProfilePropsType = {
+  name: string;
+  desc: string;
+  data: PostType[];
+  handleEdit: () => void;
+  handleDelete: () => void;
+  handleTagClick: (postTag: string) => void;
+
+};
 
 const Profile = ({ name, desc, data, handleEdit, handleDelete }) => {
   return (
@@ -9,7 +20,9 @@ const Profile = ({ name, desc, data, handleEdit, handleDelete }) => {
       <p className="desc text-left">{desc}</p>
 
       <div className="prompt_layout mt-10">
-        {data.map((post) => (
+
+        {/* Prompt Card List */}
+        {data.map((post: PostType) => (
           <PromptCard
             key={post._id}
             post={post}
