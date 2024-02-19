@@ -4,16 +4,9 @@ import { useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
-type PostType = {
-  tag: string;
-  creator: {
-    _id: string;
-    username: string;
-    email: string;
-    image: string;
-  };
-  prompt: string;
-};
+
+import { PostType } from "./Type";
+
 
 type PromptCardProps = {
   post: PostType;
@@ -48,7 +41,7 @@ const PromptCard = ({
     <div className="prompt_card">
       <div className="flex items-start justify-between gap-5">
         <div
-          className="flex flex-1 cursor-pointer items-center justify-start gap-3"
+          className="flex items-center justify-start flex-1 gap-3 cursor-pointer"
           onClick={handleProfileClick}
         >
           <Image
@@ -56,14 +49,14 @@ const PromptCard = ({
             alt="user_image"
             width={40}
             height={40}
-            className="rounded-full object-contain"
+            className="object-contain rounded-full"
           />
 
           <div className="flex flex-col">
-            <h3 className="font-satoshi font-semibold text-gray-900">
+            <h3 className="font-semibold text-gray-900 font-satoshi">
               {post.creator?.username}
             </h3>
-            <p className="font-inter text-sm text-gray-500">
+            <p className="text-sm text-gray-500 font-inter">
               {post.creator?.email}
             </p>
           </div>
@@ -84,26 +77,26 @@ const PromptCard = ({
       </div>
 
       {/* <p className="my-4 text-sm text-gray-700 font-satoshi">{post.prompt}</p> */}
-      <p className="white-space:pre-wrap my-4 font-satoshi text-sm text-gray-700">
+      <p className="my-4 text-sm text-gray-700 white-space:pre-wrap font-satoshi">
         {post.prompt}
       </p>
       <p
-        className="blue_gradient cursor-pointer font-inter text-sm"
+        className="text-sm cursor-pointer blue_gradient font-inter"
         onClick={() => handleTagClick && handleTagClick(post.tag)}
       >
         {post.tag}
       </p>
 
       {session?.user === post.creator?._id && pathName === "/profile" && (
-        <div className="flex-center mt-5 gap-4 border-t border-gray-100 pt-3">
+        <div className="gap-4 pt-3 mt-5 border-t border-gray-100 flex-center">
           <p
-            className="green_gradient cursor-pointer font-inter text-sm"
+            className="text-sm cursor-pointer green_gradient font-inter"
             onClick={handleEdit}
           >
             Edit
           </p>
           <p
-            className="orange_gradient cursor-pointer font-inter text-sm"
+            className="text-sm cursor-pointer orange_gradient font-inter"
             onClick={handleDelete}
           >
             Delete
