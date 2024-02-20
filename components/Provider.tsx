@@ -2,8 +2,15 @@
 
 import { SessionProvider } from "next-auth/react";
 import Nav from "./Nav";
+import { ReactNode } from "react";
+import { SessionType } from "./Type";
 
-const Provider = ({ children, session }) => {
+interface ProviderPropsType {
+  children: ReactNode;
+  session: SessionType; 
+}
+
+const Provider = ({ children, session }: ProviderPropsType) => {
   return (
     <SessionProvider session={session}>
       <Nav />

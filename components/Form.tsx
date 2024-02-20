@@ -1,6 +1,21 @@
 import Link from "next/link";
+import { PostType } from "./Type";
 
-const Form = ({ type, post, setPost, submitting, handleSubmit }) => {
+interface FormPropsType {
+  type: string;
+  post: PostType;
+  setPost: any;
+  submitting: boolean;
+  handleSubmit: any;
+}
+
+const Form = ({
+  type,
+  post,
+  setPost,
+  submitting,
+  handleSubmit,
+}: FormPropsType) => {
   return (
     <section className="flex-start w-full max-w-full flex-col">
       <h1 className="head_text text-left">

@@ -5,13 +5,18 @@ type ProfilePropsType = {
   name: string;
   desc: string;
   data: PostType[];
-  handleEdit: () => void;
-  handleDelete: () => void;
+  handleEdit: (post: PostType) => void;
+  handleDelete: (post: PostType) => void;
   handleTagClick: (postTag: string) => void;
-
 };
 
-const Profile = ({ name, desc, data, handleEdit, handleDelete }) => {
+const Profile = ({
+  name,
+  desc,
+  data,
+  handleEdit,
+  handleDelete,
+}: ProfilePropsType) => {
   return (
     <section className="w-full">
       <h1 className="head_text text-left">
@@ -20,7 +25,6 @@ const Profile = ({ name, desc, data, handleEdit, handleDelete }) => {
       <p className="desc text-left">{desc}</p>
 
       <div className="prompt_layout mt-10">
-
         {/* Prompt Card List */}
         {data.map((post: PostType) => (
           <PromptCard

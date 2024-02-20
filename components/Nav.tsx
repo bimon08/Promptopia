@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 const Nav = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [providers, setProviders] = useState(null);
+  const [providers, setProviders] = useState<any | null>();
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   async function getProvider() {
@@ -23,7 +23,7 @@ const Nav = () => {
   useEffect(() => {
     getProvider();
   }, []);
-  
+
   return (
     <nav className="flex-between mb-16 w-full pt-3">
       <Link href="/" className="flex-center flex gap-2">
@@ -39,7 +39,7 @@ const Nav = () => {
 
       {/* Desktop Navigation */}
       <div className="hidden sm:flex">
-        {status === "authenticated" && status !== "loading" ? (
+        {status === "authenticated" ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
@@ -56,7 +56,7 @@ const Nav = () => {
 
             <Link href="/profile">
               <Image
-                src={session?.user.image}
+                src={session?.user?.image ?? ""}
                 width={37}
                 height={37}
                 className="rounded-full"
@@ -68,7 +68,7 @@ const Nav = () => {
         ) : (
           <>
             {providers &&
-              Object.values(providers).map((provider) => (
+              Object.values(providers).map((provider: any) => (
                 <button
                   type="button"
                   key={provider.name}
@@ -86,10 +86,10 @@ const Nav = () => {
 
       {/* Mobile Navigation */}
       <div className="relative flex sm:hidden">
-        {status === "authenticated" && status !== "loading" ? (
+        {status === "authenticated" ? (
           <div className="flex">
             <Image
-              src={session?.user.image}
+              src={session?.user?.image ?? ""}
               width={37}
               height={37}
               className="rounded-full"
@@ -129,7 +129,7 @@ const Nav = () => {
         ) : (
           <>
             {providers &&
-              Object.values(providers).map((provider) => (
+              Object.values(providers).map((provider: any) => (
                 <button
                   type="button"
                   key={provider.name}

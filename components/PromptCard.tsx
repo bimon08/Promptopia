@@ -10,9 +10,9 @@ import { PostType } from "./Type";
 
 type PromptCardProps = {
   post: PostType;
-  handleEdit: () => void;
-  handleDelete: () => void;
-  handleTagClick: (postTag: string) => void;
+  handleEdit?: () => void;
+  handleDelete?: () => void;
+  handleTagClick?: (postTag: string) => void;
 };
 const PromptCard = ({
   post,
