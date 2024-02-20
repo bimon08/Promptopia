@@ -1,16 +1,17 @@
 // Import necessary modules
-"use client"
+"use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Form from "@components/Form";
+import { PostType } from "@components/Type";
 
 const UpdatePrompt = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const promptId = searchParams.get("id");
 
-  const [post, setPost] = useState({ prompt: "", tag: "" });
+  const [post, setPost] = useState<PostType>();
   const [submitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const UpdatePrompt = () => {
     if (promptId) getPromptDetails();
   }, [promptId]);
 
-  const updatePrompt = async (e) => {
+  const updatePrompt = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -51,6 +52,10 @@ const UpdatePrompt = () => {
     }
 
     try {
+      if (!post) {
+        console.error("Missing post data");
+        return;
+      }
       const response = await fetch(`/api/prompt/${promptId}`, {
         method: "PATCH",
         headers: {
@@ -77,7 +82,7 @@ const UpdatePrompt = () => {
   return (
     <Form
       type="Edit"
-      post={post}
+      post={post as PostType}
       setPost={setPost}
       submitting={submitting}
       handleSubmit={updatePrompt}

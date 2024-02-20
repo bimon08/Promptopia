@@ -1,7 +1,7 @@
 export type PostType = {
-  _id: string;
+  _id?: string;
   tag: string;
-  creator: {
+  creator?: {
     _id: string;
     username: string;
     email: string;

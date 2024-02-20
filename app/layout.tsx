@@ -9,11 +9,16 @@ export const metadata = {
     "A platform for mutual upbuilding and inspiration from the Bible.",
 };
 
-const RootLayout = ({ children }) => {
+interface RootLayoutPropstype {
+  children: React.ReactNode;
+}
+
+const RootLayout = ({ children }: RootLayoutPropstype) => {
   return (
     <html lang="en">
       <body>
-        <Provider>
+        <Provider
+        >
           <div className="main">
             <div className="gradient" />
           </div>

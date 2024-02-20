@@ -7,7 +7,7 @@ import { SessionType } from "./Type";
 
 interface ProviderPropsType {
   children: ReactNode;
-  session: SessionType; 
+  session?: SessionType; 
 }
 
 const Provider = ({ children, session }: ProviderPropsType) => {
