@@ -1,7 +1,8 @@
 import Prompt from "@models/prompt";
 import { connectToDB } from "@utils/database";
+import { NextRequest } from "next/server";
 
-export const POST = async (request) => {
+export const POST = async (request:NextRequest) => {
   const { userId, prompt, tag } = await request.json();
 
   try {
