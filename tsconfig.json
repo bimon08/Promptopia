@@ -41,6 +41,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/config.ts"
-, "components/Feed.jsx"  ],
+, "components/Feed.jsx", "app/api/auth/[...nextauth]/route.js"  ],
   "exclude": ["node_modules"]
 }
