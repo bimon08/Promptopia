@@ -1,5 +1,5 @@
 import React from "react";
-import Feed from "@components/Feed";
+import Feed from './../components/Feed';
 
 const Home = () => {
   // You can replace this with an actual Bible verse

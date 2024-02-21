@@ -25,7 +25,7 @@ const Nav = () => {
   }, []);
 
   return (
-    <nav className="flex-between  w-full  ">
+    <nav className="flex-between w-full p-6">
       <Link href="/" className="flex-center flex gap-2">
         <Image
           src="/assets/images/logo.svg"

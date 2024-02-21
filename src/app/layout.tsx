@@ -1,6 +1,6 @@
-import "../styles/globals.css";
-import Nav from "@components/Nav";
-import Provider from "@components/Provider";
+import Provider from "@src/components/Provider";
+import "./globals.css";
+
 import { Toaster, toast } from "sonner";
 
 export const metadata = {
