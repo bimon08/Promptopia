@@ -26,7 +26,7 @@ const PromptCard = ({
   const [copied, setCopied] = useState<string>();
 
   const handleProfileClick = () => {
-    if (post.creator._id === session?.user) return router.push("/profile");
+    if (post?.creator?._id === session?.user) return router.push("/profile");
 
     router.push(`/profile/${post.creator?._id}?name=${post.creator?.username}`);
   };
@@ -45,7 +45,7 @@ const PromptCard = ({
           onClick={handleProfileClick}
         >
           <Image
-            src={post.creator?.image}
+            src={post.creator?.image??''}
             alt="user_image"
             width={40}
             height={40}

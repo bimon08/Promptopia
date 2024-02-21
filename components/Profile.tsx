@@ -5,9 +5,9 @@ type ProfilePropsType = {
   name: string;
   desc: string;
   data: PostType[];
-  handleEdit: (post: PostType) => void;
-  handleDelete: (post: PostType) => void;
-  handleTagClick: (postTag: string) => void;
+  handleEdit?: (post: PostType) => void;
+  handleDelete?: (post: PostType) => void;
+  handleTagClick?: (postTag: string) => void;
 };
 
 const Profile = ({

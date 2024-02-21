@@ -17,8 +17,7 @@ const RootLayout = ({ children }: RootLayoutPropstype) => {
   return (
     <html lang="en">
       <body>
-        <Provider
-        >
+        <Provider>
           <div className="main">
             <div className="gradient" />
           </div>

@@ -40,7 +40,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/config.ts"
-, "components/Feed.jsx", "app/api/auth/[...nextauth]/route.js"  ],
+    "src/config.ts",
+    "components/Feed.jsx",
+    "app/api/auth/[...nextauth]/route.js",
+    "app/profile/page.jsx"
+, "utils/database.ts", "app/create-prompt/page.jsx"  ],
   "exclude": ["node_modules"]
 }

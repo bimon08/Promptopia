@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import Profile from "@components/Profile";
+import { ParamType } from "app/api/_lib/type";
 
-const UserProfile = ({ params }) => {
+const UserProfile = ({ params }: ParamType) => {
   const searchParams = useSearchParams();
   const userName = searchParams.get("name");
 
@@ -24,7 +25,7 @@ const UserProfile = ({ params }) => {
 
   return (
     <Profile
-      name={userName}
+      name={userName??''}
       desc={`Welcome to ${userName}'s personalized profile page. Explore ${userName}'s exceptional prompts and be inspired by the power of their imagination`}
       data={userPosts}
     />
