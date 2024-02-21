@@ -76,10 +76,16 @@ const PromptCard = ({
         </div>
       </div>
 
-      {/* <p className="my-4 text-sm text-gray-700 font-satoshi">{post.prompt}</p> */}
-      <p className="my-4 text-sm text-gray-700 white-space:pre-wrap font-satoshi">
-        {post.prompt}
-      </p>
+    {post.prompt && post.prompt.includes('\n') ? (
+  <pre className="my-4 text-sm text-gray-700 font-satoshi">
+    {post.prompt}
+  </pre>
+) : (
+  <p className="my-4 text-sm text-gray-700">
+    {post.prompt}
+  </p>
+)}
+
       <p
         className="text-sm cursor-pointer blue_gradient font-inter"
         onClick={() => handleTagClick && handleTagClick(post.tag)}
