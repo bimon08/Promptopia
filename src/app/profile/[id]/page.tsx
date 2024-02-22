@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import Profile from "@components/Profile";
-import { ParamType } from "app/api/_lib/type";
+import { ParamType } from "@src/app/api/_lib/type";
 
 const UserProfile = ({ params }: ParamType) => {
   const searchParams = useSearchParams();

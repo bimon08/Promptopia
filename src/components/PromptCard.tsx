@@ -75,6 +75,15 @@ const PromptCard = ({
         </div>
       </div>
 
+      {/* {post.image_url && ( */}
+      <Image
+        src="https://images.unsplash.com/photo-1632882765546-1ee75f53becb?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt="Description of the image"
+        width={300}
+        height={300}
+      />
+      {/* )} */}
+
       {post.prompt && post.prompt.includes("\n") ? (
         <pre className="my-4 font-satoshi text-sm text-gray-700">
           {post.prompt}
@@ -82,7 +91,7 @@ const PromptCard = ({
       ) : (
         <p className="my-4 text-sm text-gray-700">{post.prompt}</p>
       )}
-     
+
       <p
         className="blue_gradient cursor-pointer font-inter text-sm"
         onClick={() => handleTagClick && handleTagClick(post.tag)}

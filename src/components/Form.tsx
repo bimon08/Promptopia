@@ -17,21 +17,21 @@ const Form = ({
   handleSubmit,
 }: FormPropsType) => {
   return (
-    <section className="flex-start w-full max-w-full flex-col">
-      <h1 className="head_text text-left">
+    <section className="flex-col w-full max-w-full flex-start">
+      <h1 className="text-left head_text">
         <span className="blue_gradient">{type} Post</span>
       </h1>
-      <p className="desc max-w-md text-left">
+      <p className="max-w-md text-left desc">
         {type} and share amazing prompts with the world, and let your
         imagination run wild with any AI-powered platform
       </p>
 
       <form
         onSubmit={handleSubmit}
-        className="glassmorphism mt-10 flex w-full max-w-2xl flex-col gap-7"
+        className="flex flex-col w-full max-w-2xl mt-10 glassmorphism gap-7"
       >
         <label>
-          <span className="font-satoshi text-base font-semibold text-gray-700">
+          <span className="text-base font-semibold text-gray-700 font-satoshi">
             Your AI Prompt
           </span>
 
@@ -45,7 +45,7 @@ const Form = ({
         </label>
 
         <label>
-          <span className="font-satoshi text-base font-semibold text-gray-700">
+          <span className="text-base font-semibold text-gray-700 font-satoshi">
             Field of Prompt{" "}
             <span className="font-normal">
               (#product, #webdevelopment, #idea, etc.)
@@ -61,7 +61,7 @@ const Form = ({
           />
         </label>
 
-        <div className="flex-end mx-3 mb-5 gap-4">
+        <div className="gap-4 mx-3 mb-5 flex-end">
           <Link href="/" className="text-sm text-gray-500">
             Cancel
           </Link>

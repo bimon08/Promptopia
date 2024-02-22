@@ -30,9 +30,9 @@
     ],
     "paths": {
       "@src/*": ["./src/*"],
-      "@components/*": ["./components/*"],
-      "@models/*": ["src/models/*"],
-      "@utils/*": ["src/utils/*"]
+      "@components/*": ["./src/components/*"],
+      "@models/*": ["./src/models/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   },
   "include": [

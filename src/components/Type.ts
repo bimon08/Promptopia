@@ -8,6 +8,7 @@ export type PostType = {
     image: string;
   };
   prompt: string;
+  image_url?: string;
 };
 
 export type SessionType = {
