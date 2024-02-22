@@ -16,7 +16,7 @@ const UserProfile = ({ params }: ParamType) => {
     const fetchPosts = async () => {
       const response = await fetch(`/api/users/${params?.id}/posts`);
       const data = await response.json();
-
+console.log(data);
       setUserPosts(data);
     };
 

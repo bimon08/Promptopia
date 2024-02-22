@@ -41,7 +41,7 @@ const PromptCard = ({
     <div className="prompt_card">
       <div className="flex items-start justify-between gap-5">
         <div
-          className="flex flex-1 cursor-pointer items-center justify-start gap-3"
+          className="flex items-center justify-start flex-1 gap-3 cursor-pointer"
           onClick={handleProfileClick}
         >
           <Image
@@ -49,14 +49,14 @@ const PromptCard = ({
             alt="user_image"
             width={40}
             height={40}
-            className="rounded-full object-contain"
+            className="object-contain rounded-full"
           />
 
           <div className="flex flex-col">
-            <h3 className="font-satoshi font-semibold text-gray-900">
+            <h3 className="font-semibold text-gray-900 font-satoshi">
               {post.creator?.username}
             </h3>
-            <p className="font-inter text-sm text-gray-500">
+            <p className="text-sm text-gray-500 font-inter">
               {post.creator?.email}
             </p>
           </div>
@@ -75,17 +75,20 @@ const PromptCard = ({
         </div>
       </div>
 
-      {/* {post.image_url && ( */}
-      <Image
-        src="https://images.unsplash.com/photo-1632882765546-1ee75f53becb?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="Description of the image"
-        width={300}
-        height={300}
-      />
-      {/* )} */}
+      {post.image_url && (
+        <div className="mt-4">
+          <Image
+            src={post.image_url}
+            alt="Description of the image"
+            width={300}
+            height={300}
+            className="object-cover rounded-lg shadow-lg"
+          />
+        </div>
+      )}
 
       {post.prompt && post.prompt.includes("\n") ? (
-        <pre className="my-4 font-satoshi text-sm text-gray-700">
+        <pre className="my-4 text-sm text-gray-700 font-satoshi">
           {post.prompt}
         </pre>
       ) : (
@@ -93,22 +96,22 @@ const PromptCard = ({
       )}
 
       <p
-        className="blue_gradient cursor-pointer font-inter text-sm"
+        className="text-sm cursor-pointer blue_gradient font-inter"
         onClick={() => handleTagClick && handleTagClick(post.tag)}
       >
         {post.tag}
       </p>
 
       {session?.user === post.creator?._id && pathName === "/profile" && (
-        <div className="flex-center mt-5 gap-4 border-t border-gray-100 pt-3">
+        <div className="gap-4 pt-3 mt-5 border-t border-gray-100 flex-center">
           <p
-            className="green_gradient cursor-pointer font-inter text-sm"
+            className="text-sm cursor-pointer green_gradient font-inter"
             onClick={handleEdit}
           >
             Edit
           </p>
           <p
-            className="orange_gradient cursor-pointer font-inter text-sm"
+            className="text-sm cursor-pointer orange_gradient font-inter"
             onClick={handleDelete}
           >
             Delete
