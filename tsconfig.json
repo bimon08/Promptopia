@@ -31,8 +31,8 @@
     "paths": {
       "@src/*": ["./src/*"],
       "@components/*": ["./components/*"],
-      "@models/*": ["./models/*"],
-      "@utils/*": ["./utils/*"]
+      "@models/*": ["src/models/*"],
+      "@utils/*": ["src/utils/*"]
     }
   },
   "include": [
@@ -40,7 +40,12 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/config.ts"
-, "components/Feed.jsx"  ],
+    "src/config.ts",
+    "components/Feed.jsx",
+    "app/api/auth/[...nextauth]/route.js",
+    "app/profile/page.jsx",
+    "src/utils/database.ts",
+    "app/create-prompt/page.jsx"
+  ],
   "exclude": ["node_modules"]
 }
