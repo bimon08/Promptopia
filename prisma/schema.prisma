@@ -16,7 +16,7 @@ datasource db {
 model prompts {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   creator String @db.ObjectId
-  image_url String? @default("null")
+  image_url String? 
   prompt  String
   tag     String
   v       Int? @default(0) @map("__v")

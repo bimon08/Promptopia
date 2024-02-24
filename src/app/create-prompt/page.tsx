@@ -5,18 +5,22 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Form from "@src/components/Form";
 import { toast } from "sonner";
+import { PostType } from "@src/components/Type";
 
 const CreatePrompt = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
   const [submitting, setIsSubmitting] = useState<boolean>(false);
-  const [post, setPost] = useState({ prompt: "", tag: "", image: "" });
+  const [post, setPost] = useState<PostType>({
+    prompt: "",
+    tag: "",
+    image_url: "",
+  });
 
   const createPrompt = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
     try {
       if (session?.user) {
         const response = await fetch("/api/prompt/new", {
@@ -26,7 +30,7 @@ const CreatePrompt = () => {
             // @ts-ignore
             userId: session?.user?.id,
             tag: post.tag,
-            image: post.image,
+            image_url: post.image_url,
           }),
         });
         if (response.ok) {

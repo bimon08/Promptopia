@@ -39,7 +39,6 @@ const Form = ({
   }, [selectedFile, session?.user?.email]);
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      console.log("file selected");
       setSelectedFile(e.target.files[0]);
     }
   };
