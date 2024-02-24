@@ -18,7 +18,6 @@ const CreatePrompt = () => {
     setIsSubmitting(true);
 
     try {
-      console.log("Sending prompt creation request...");
       if (session?.user) {
         const response = await fetch("/api/prompt/new", {
           method: "POST",
@@ -32,9 +31,11 @@ const CreatePrompt = () => {
         });
         if (response.ok) {
           toast.success("Prompt created successfully!");
-          router.push("/");
+          router.replace("/");
+          return;
         } else {
           toast.info("Failed to create prompt. Please try again.");
+          return;
         }
       }
     } catch (error: any) {

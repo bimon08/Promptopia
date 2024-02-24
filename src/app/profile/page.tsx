@@ -1,18 +1,16 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Profile from "@src/components/Profile";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import { PostType } from "@src/components/Type";
-
-
+import axios from "axios";
 
 const MyProfile: React.FC = () => {
   const router = useRouter();
-  const { data: session } = useSession();
-
+  const { data: session, status } = useSession();
   const [posts, setPosts] = useState<PostType[]>([]);
   useEffect(() => {
     const fetchPosts = async () => {
@@ -23,6 +21,7 @@ const MyProfile: React.FC = () => {
           throw new Error("Failed to fetch posts");
         }
         const data = await response.json();
+
         setPosts(data);
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -30,11 +29,11 @@ const MyProfile: React.FC = () => {
       }
     };
     // @ts-ignore
-    if (session?.user.id) fetchPosts();
-  }, [session]);
+    if (session?.user.id && status !== "loading") fetchPosts();
+  }, [session, status]);
 
   const handleEdit = (post: PostType) => {
-    router.push(`/update-prompt?id=${post._id}`);
+    router.push(`/update-prompt?id=${post.id}`);
   };
 
   const handleDelete = async (post: PostType) => {
@@ -42,15 +41,11 @@ const MyProfile: React.FC = () => {
       "Are you sure you want to delete this prompt?",
     );
     if (hasConfirmed) {
-
       // TODO: Handle post._id
       try {
-
         // @ts-ignore
-        await fetch(`/api/prompt/${post._id.toString()}`, {
-          method: "DELETE",
-        });
-        const filteredPosts = posts.filter((p) => p._id !== post._id);
+        await axios.delete(`/api/prompt/${post.id.toString()}`);
+        const filteredPosts = posts.filter((p) => p.id !== post.id);
         setPosts(filteredPosts);
         toast.success("Prompt deleted successfully");
       } catch (error) {

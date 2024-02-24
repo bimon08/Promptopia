@@ -50,7 +50,7 @@ const Form = ({
   }, [selectedFile, handleUpload]);
   useEffect(() => {
     if (downloadURL) {
-      setPost({ ...post, image: downloadURL });
+      setPost({ ...post, image_url: downloadURL });
     }
   }, [downloadURL, setPost, post]);
   return (
@@ -125,7 +125,7 @@ const Form = ({
             disabled={submitting}
             className="rounded-full bg-primary-orange px-5 py-1.5 text-sm text-white"
           >
-            {submitting ? `${type}ing...` : type}
+            {submitting ? "Loading" : type}
           </button>
         </div>
       </form>

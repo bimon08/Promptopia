@@ -1,23 +1,25 @@
-import { Schema, model, models } from "mongoose";
-
-const PromptSchema = new Schema({
-  creator: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  prompt: {
-    type: String,
-    required: [true, "Prompt is required."],
-  },
-  tag: {
-    type: String,
-    required: [true, "Tag is required."],
-  },
-  image: {
-    type: String,
-  },
+import { z } from "zod";
+export const PromptSchema = z.object({
+  prompt: z
+    .string({
+      required_error: "Prompt is required",
+    })
+    .min(3, {
+      message: "Prompt must be at least 3 characters long",
+    })
+    .max(500, {
+      message: "Prompt must be at most 500 characters long",
+    }),
+  tag: z
+    .string({
+      required_error: "Tag is required",
+    })
+    .min(3, {
+      message: "Tag must be at least 3 characters long",
+    })
+    .max(20, {
+      message: "Tag must be at most 20 characters long",
+    }),
+  image_url: z.string().optional(),
 });
-
-const Prompt = models.Prompt || model("Prompt", PromptSchema);
-
-export default Prompt;
+export type PromptSchemaType = z.infer<typeof PromptSchema>;

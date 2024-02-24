@@ -1,46 +1,40 @@
 // Import necessary modules
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PostType } from "@src/components/Type";
 import Form from "@src/components/Form";
-
+import { toast } from "sonner";
+import axios from "axios";
 
 const UpdatePrompt = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const promptId = searchParams.get("id");
-
   const [post, setPost] = useState<PostType>();
   const [submitting, setIsSubmitting] = useState(false);
+  const getPromptDetails = useCallback(async () => {
+    try {
+      const response = await axios.get(`/api/prompt/${promptId}`);
+      if (response.status !== 200) {
+        toast.error("Failed to fetch prompt details");
+        return;
+      }
+      const data = await response.data;
+      setPost({
+        prompt: data.prompt,
+        tag: data.tag,
+        image_url: data.image,
+      });
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }, [promptId]);
 
   useEffect(() => {
-    const getPromptDetails = async () => {
-      try {
-        const response = await fetch(`/api/prompt/${promptId}`);
-        if (!response.ok) {
-          console.error("Failed to fetch prompt details");
-          return;
-        }
-        const data = await response.json();
-
-        console.log("Prompt Details:", data);
-
-        setPost({
-          prompt: data.prompt,
-          tag: data.tag,
-        });
-      } catch (error) {
-        console.error(
-          "An error occurred while fetching prompt details:",
-          error,
-        );
-      }
-    };
-
     if (promptId) getPromptDetails();
-  }, [promptId]);
+  }, [promptId, getPromptDetails]);
 
   const updatePrompt = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -57,37 +51,40 @@ const UpdatePrompt = () => {
         console.error("Missing post data");
         return;
       }
-      const response = await fetch(`/api/prompt/${promptId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          prompt: post.prompt,
-          tag: post.tag,
-        }),
+
+      const response = await axios.patch(`/api/prompt/${promptId}`, {
+        prompt: post.prompt,
+        tag: post.tag,
+        image_url: post.image_url,
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         router.push("/");
+        toast.success("Prompt updated successfully");
+        return;
       } else {
-        console.error("Failed to update prompt");
+        toast.error("Failed to update prompt");
+        return;
       }
-    } catch (error) {
-      console.error("An error occurred while updating prompt:", error);
+    } catch (error: any) {
+      toast.error(error.message);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <Form
-      type="Edit"
-      post={post as PostType}
-      setPost={setPost}
-      submitting={submitting}
-      handleSubmit={updatePrompt}
-    />
+    <>
+      {post && (
+        <Form
+          type="Save"
+          post={post as PostType}
+          setPost={setPost}
+          submitting={submitting}
+          handleSubmit={updatePrompt}
+        />
+      )}
+    </>
   );
 };
 

@@ -102,7 +102,8 @@ const PromptCard = ({
         {post.tag}
       </p>
 
-      {session?.user === post.user?.id && pathName === "/profile" && (
+      {/* @ts-ignore */}
+      {session?.user?.id === post.user?.id && pathName === "/profile" && (
         <div className="flex-center mt-5 gap-4 border-t border-gray-100 pt-3">
           <p
             className="green_gradient cursor-pointer font-inter text-sm"
