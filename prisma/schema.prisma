@@ -19,15 +19,15 @@ model prompts {
   image_url String? @default("null")
   prompt  String
   tag     String
-  v       String? @default("1") @map("__v")
-  user    user    @relation(fields: [creator], references: [id])
+  v       Int? @default(0) @map("__v")
+  user    users    @relation(fields: [creator], references: [id])
 }
 
-model user {
+model users {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  email    String
+  email    String @unique 
   username String
   image    String
-  v        String? @default("1") @map("__v")
+  v        Int? @default(0) @map("__v")
   prompts  prompts[]
 }

@@ -15,8 +15,6 @@ export async function POST(request: NextRequest) {
 
     return new Response(JSON.stringify(newPrompt), { status: 201 });
   } catch (error: any) {
-    console.log(error);
-
     return new Response("Failed to create a new prompt", { status: 500 });
   }
 }

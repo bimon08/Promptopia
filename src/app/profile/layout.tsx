@@ -5,5 +5,3 @@ const ProfilePageLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default ProfilePageLayout;
-// auto rename tag
-// color bracketṢ
