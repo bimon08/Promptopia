@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { ChangeEvent, useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@src/utils/firebase";
+import { upload_image_func } from "@src/utils/upload-func";
 
 const Upload = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -17,37 +18,18 @@ const Upload = () => {
     }
   };
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setUploadError("Please select a file to upload.");
-      return;
-    }
-
-    setUploadError(null);
-
+  async function handleUpload() {
     try {
-      if (session?.user && session.user.email) {
-        const timestamp = new Date().getTime();
-        const storageRef = ref(
-          storage,
-          `images/${session.user.email}/${timestamp}_${selectedFile.name}`,
-        );
-        await uploadBytes(storageRef, selectedFile);
-
-        const downloadURL = await getDownloadURL(storageRef);
-        setDownloadURL(downloadURL);
-
-        // File uploaded successfully
-        console.log("File uploaded successfully");
-      } else {
-        throw new Error("User not available in session");
-      }
-    } catch (error: any) {
-      console.error(error);
-      setUploadError(error.message);
+      const downloadurl = await upload_image_func({
+        selectedFile,
+        email: session?.user?.email ?? "",
+      });
+      console.log(downloadurl);
+      setDownloadURL(downloadurl);
+    } catch (error) {
+      console.log(error);
     }
-  };
-
+  }
   return (
     <div>
       <input type="file" onChange={handleFileChange} />
