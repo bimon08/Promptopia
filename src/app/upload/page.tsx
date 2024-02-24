@@ -1,45 +1,49 @@
+"use client";
 
+import { useSession } from "next-auth/react";
+import { ChangeEvent, useState } from "react";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "@src/utils/firebase";
 
 const Upload = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadError, setUploadError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [downloadURL, setDownloadURL] = useState<string | null>(null);
+  const { data: session } = useSession();
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
 
   const handleUpload = async () => {
     if (!selectedFile) {
-      setUploadError('Please select a file to upload.');
+      setUploadError("Please select a file to upload.");
       return;
     }
 
-    setUploadProgress(0);
     setUploadError(null);
 
     try {
-      const storageRef = ref(storage, `uploads/${selectedFile.name}`);
-      const uploadTask = uploadBytes(storageRef, selectedFile);
+      if (session?.user && session.user.email) {
+        const timestamp = new Date().getTime();
+        const storageRef = ref(
+          storage,
+          `images/${session.user.email}/${timestamp}_${selectedFile.name}`,
+        );
+        await uploadBytes(storageRef, selectedFile);
 
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setUploadProgress(progress);
-        },
-        (error) => {
-          setUploadError(error.message);
-        },
-        async () => {
-          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          console.log('File uploaded successfully:', downloadURL);
-          // Perform any additional actions after successful upload, e.g., display download link, update database, etc.
-        }
-      );
-    } catch (error) {
+        const downloadURL = await getDownloadURL(storageRef);
+        setDownloadURL(downloadURL);
+
+        // File uploaded successfully
+        console.log("File uploaded successfully");
+      } else {
+        throw new Error("User not available in session");
+      }
+    } catch (error: any) {
+      console.error(error);
       setUploadError(error.message);
     }
   };
@@ -48,8 +52,15 @@ const Upload = () => {
     <div>
       <input type="file" onChange={handleFileChange} />
       <button onClick={handleUpload}>Upload</button>
-      {uploadProgress > 0 && <p>Uploading: {uploadProgress}%</p>}
-      {uploadError && <p style={{ color: 'red' }}>{uploadError}</p>}
+      {uploadError && <p style={{ color: "red" }}>{uploadError}</p>}
+      {downloadURL && (
+        <div>
+          <p>File uploaded successfully:</p>
+          <a href={downloadURL} target="_blank" rel="noopener noreferrer">
+            {downloadURL}
+          </a>
+        </div>
+      )}
     </div>
   );
 };
