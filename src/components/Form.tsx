@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { PostType } from "./Type";
+import { useSession } from "next-auth/react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { upload_image_func } from "@src/utils/upload-func";
+import { toast } from "sonner";
 
 interface FormPropsType {
   type: string;
@@ -16,7 +20,35 @@ const Form = ({
   submitting,
   handleSubmit,
 }: FormPropsType) => {
-  
+  const [downloadURL, setDownloadURL] = useState<string | null>(null);
+  const { data: session } = useSession();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  async function handleUpload() {
+    try {
+      console.log("uploading image...");
+      const downloadurl = await upload_image_func({
+        selectedFile,
+        email: session?.user?.email ?? "",
+      });
+      console.log(downloadurl);
+      setDownloadURL(downloadurl);
+      toast.success("File uploaded successfully");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      console.log("file selected");
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+  useEffect(() => {
+    if (selectedFile) {
+      handleUpload();
+    }
+  }, [selectedFile]);
   return (
     <section className="flex-start w-full max-w-full flex-col">
       <h1 className="head_text text-left">
@@ -72,8 +104,10 @@ const Form = ({
             >
               <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
             </svg>
-            <span className="mt-2 text-base leading-3">Select an Image</span>
-            <input type="file" className="hidden" />
+            <span className="mt-2 text-base leading-3">
+              {selectedFile ? "Image Selected" : "Select an Image"}
+            </span>
+            <input type="file" className="hidden" onChange={handleFileChange} />
           </label>
         </div>
 
