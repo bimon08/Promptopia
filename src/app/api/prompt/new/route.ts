@@ -1,17 +1,22 @@
-import Prompt from "@src/models/prompt";
-import { connectToDB } from "@src/utils/database";
 import { NextRequest } from "next/server";
+import { prisma } from "prisma/client-prisma";
 
-export const POST = async (request: NextRequest) => {
-  const { userId, prompt, tag } = await request.json();
-
+export async function POST(request: NextRequest) {
+  const { userId, prompt, tag, image } = await request.json();
   try {
-    await connectToDB();
-    const newPrompt = new Prompt({ creator: userId, prompt, tag });
+    const newPrompt = await prisma.prompts.create({
+      data: {
+        creator: userId,
+        prompt: prompt,
+        tag: tag,
+        image_url: image,
+      },
+    });
 
-    await newPrompt.save();
     return new Response(JSON.stringify(newPrompt), { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
+    console.log(error);
+
     return new Response("Failed to create a new prompt", { status: 500 });
   }
-};
+}

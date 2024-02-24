@@ -18,6 +18,7 @@ const Feed = () => {
         const response = await fetch("/api/prompt");
         if (response.ok) {
           const data = await response.json();
+          console.log("Fetched prompts:", data);
           setAllPosts(data || []);
         } else {
           console.error("Failed to fetch prompts");

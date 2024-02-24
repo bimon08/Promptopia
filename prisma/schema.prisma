@@ -13,19 +13,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model prompt {
-  id      String  @id @map("_id") @db.ObjectId
-  creator String
+model prompts {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  creator String @db.ObjectId
   image_url String? @default("null")
   prompt  String
   tag     String
   v       String? @default("1") @map("__v")
+  user    user    @relation(fields: [creator], references: [id])
 }
 
 model user {
-  id       String  @id @map("_id") @db.ObjectId
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
   email    String
   username String
   image    String
   v        String? @default("1") @map("__v")
+  prompts  prompts[]
 }

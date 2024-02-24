@@ -49,6 +49,11 @@ const Form = ({
       handleUpload();
     }
   }, [selectedFile]);
+  useEffect(() => {
+    if (downloadURL) {
+      setPost({ ...post, image: downloadURL });
+    }
+  }, [downloadURL, setPost, post]);
   return (
     <section className="flex-start w-full max-w-full flex-col">
       <h1 className="head_text text-left">

@@ -1,4 +1,4 @@
-const { default: mongoose } = require('mongoose')
+const { default: mongoose } = require("mongoose");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -12,6 +12,7 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "images.unsplash.com",
       "plus.unsplash.com",
+      "firebasestorage.googleapis.com",
     ], // Add the hostname to the domains array
   },
   webpack(config) {
@@ -23,4 +24,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig
+module.exports = nextConfig;
