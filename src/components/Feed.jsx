@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import PromptCard from "./PromptCard";
 import { PromptCardList } from "./PromptCardList";
+import { toast } from "sonner";
 
 const Feed = () => {
   const [allPosts, setAllPosts] = useState([]);
@@ -16,15 +17,16 @@ const Feed = () => {
     const fetchPosts = async () => {
       try {
         const response = await fetch("/api/prompt");
+
         if (response.ok) {
           const data = await response.json();
-          console.log("Fetched prompts:", data);
+          console.log("data", data);
           setAllPosts(data || []);
         } else {
-          console.error("Failed to fetch prompts");
+          toast.error("Failed to fetch prompts");
         }
       } catch (error) {
-        console.error("An error occurred while fetching prompts:", error);
+        toast.error("An error occurred while fetching prompts:", error);
       }
     };
 

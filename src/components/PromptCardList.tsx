@@ -1,16 +1,17 @@
 import PromptCard from "./PromptCard";
+import { PostType } from "./Type";
 
 interface PromptCardListProps {
-    data: any[];
-    handleTagClick?: (tag: string) => void;
+  data: PostType[];
+  handleTagClick?: (tag: string) => void;
 }
 
-
-
-
-export const PromptCardList = ({ data, handleTagClick }: PromptCardListProps) => {
+export const PromptCardList = ({
+  data,
+  handleTagClick,
+}: PromptCardListProps) => {
   return (
-    <div className="mt-16 prompt_layout">
+    <div className="prompt_layout mt-16">
       {data.map((post) => (
         <PromptCard
           key={post._id}

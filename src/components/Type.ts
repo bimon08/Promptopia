@@ -1,14 +1,14 @@
 export type PostType = {
   _id?: string;
   tag: string;
-  creator?: {
-    _id: string;
-    username: string;
-    email: string;
-    image: string;
-  };
   prompt: string;
   image_url?: string;
+  user?: {
+    id?: string;
+    image?: string;
+    username?: string;
+    email: string;
+  };
 };
 
 export type SessionType = {

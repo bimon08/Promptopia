@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { PostType } from "./Type";
 import { useSession } from "next-auth/react";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { upload_image_func } from "@src/utils/upload-func";
 import { toast } from "sonner";
 
@@ -24,20 +24,19 @@ const Form = ({
   const { data: session } = useSession();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  async function handleUpload() {
+  const handleUpload = useCallback(async () => {
     try {
       console.log("uploading image...");
       const downloadurl = await upload_image_func({
         selectedFile,
         email: session?.user?.email ?? "",
       });
-      console.log(downloadurl);
       setDownloadURL(downloadurl);
       toast.success("File uploaded successfully");
     } catch (error: any) {
       toast.error(error.message);
     }
-  }
+  }, [selectedFile, session?.user?.email]);
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       console.log("file selected");
@@ -48,7 +47,7 @@ const Form = ({
     if (selectedFile) {
       handleUpload();
     }
-  }, [selectedFile]);
+  }, [selectedFile, handleUpload]);
   useEffect(() => {
     if (downloadURL) {
       setPost({ ...post, image: downloadURL });

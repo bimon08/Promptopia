@@ -1,7 +1,8 @@
 import Prompt from "@src/models/prompt";
 import { connectToDB } from "@src/utils/database";
-import { ParamType } from "app/api/_lib/type";
+
 import { NextRequest } from "next/server";
+import { ParamType } from "../../_lib/type";
 
 export const GET = async (request: NextRequest, { params }: ParamType) => {
   try {

@@ -1,14 +1,19 @@
-import Prompt from "@src/models/prompt";
-import { connectToDB } from "@src/utils/database";
 import { NextRequest } from "next/server";
+import { prisma } from "prisma/client-prisma";
 
 export const GET = async (request: NextRequest) => {
   try {
-    await connectToDB();
+    await prisma.$connect().then(() => console.log("Connected to database"));
+    const prompts = await prisma.prompts.findMany({
+      include: {
+        user: true,
+      },
+    });
 
-    const prompts = await Prompt.find({}).populate("creator");
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (error) {
-    return new Response("Failed to fetch prompts", { status: 500 });
+    console.log(error);
+
+    return new Response("Failed to fetch prompts ", { status: 500 });
   }
 };

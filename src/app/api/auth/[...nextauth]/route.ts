@@ -28,7 +28,7 @@ const handler = NextAuth({
   callbacks: {
     // fix this line below
     // @ts-ignore
-    async session({ session }): Promise<Session | undefined | null> {
+    async session({ session, user }): Promise<Session | undefined | null> {
       try {
         if (!session) {
           return null;
@@ -92,7 +92,7 @@ const handler = NextAuth({
               data: {
                 email: profile.email as string,
                 username: profile.name as string,
-                image: profile.image as string,
+                image: user.image ?? "",
               },
             })
             .then(() => true);

@@ -1,5 +1,5 @@
 import React from "react";
-import Feed from './../components/Feed';
+import Feed from "./../components/Feed";
 
 const Home = () => {
   // You can replace this with an actual Bible verse
@@ -16,7 +16,7 @@ const Home = () => {
       </h1>
       <p className="desc text-center">
         Welcome to our platform where you can build each other up by reading
-        others' posts or creating your own to inspire others.
+        {"others'"} posts or creating your own to inspire others.
       </p>
       <p className="desc text-center">{bibleVerse}</p>
 
