@@ -16,7 +16,7 @@ const UserProfile = ({ params }: ParamType) => {
     const fetchPosts = async () => {
       const response = await fetch(`/api/users/${params?.id}/posts`);
       const data = await response.json();
-console.log(data);
+      console.log(data);
       setUserPosts(data);
     };
 
@@ -25,7 +25,7 @@ console.log(data);
 
   return (
     <Profile
-      name={userName??''}
+      name={userName ?? ""}
       desc={`Welcome to ${userName}'s personalized profile page. Explore ${userName}'s exceptional prompts and be inspired by the power of their imagination`}
       data={userPosts}
     />
