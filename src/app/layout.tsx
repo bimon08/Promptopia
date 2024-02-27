@@ -1,6 +1,5 @@
 import Provider from "@src/components/Provider";
 import "./globals.css";
-
 import { Toaster, toast } from "sonner";
 
 export const metadata = {
