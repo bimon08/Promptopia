@@ -11,7 +11,7 @@ const Home = () => {
         Build and Grow
         <br className="md" />
         <span className="orange_gradient text-center">
-          As Iron Sharpens Iron
+          As Iron Sharpens Iron  1
         </span>
       </h1>
       <p className="desc text-center">
