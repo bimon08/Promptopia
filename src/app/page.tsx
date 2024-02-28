@@ -11,7 +11,7 @@ const Home = () => {
         Build and Grow
         <br className="md" />
         <span className="orange_gradient text-center">
-          As Iron Sharpens Iron  1
+          As Iron Sharpens Iron
         </span>
       </h1>
       <p className="desc text-center">
@@ -19,9 +19,6 @@ const Home = () => {
         {"others'"} posts or creating your own to inspire others.
       </p>
       <p className="desc text-center">{bibleVerse}</p>
-
-      {/* You can replace <Feed /> with a component that displays the shared posts and related content */}
-      {/* Example: <SharedPostsFeed /> */}
       <Feed />
     </section>
   );
