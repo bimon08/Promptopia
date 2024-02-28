@@ -18,7 +18,7 @@ type EditDialogFormProps = {
   onClose: () => void;
   onSubmit: (postData: Partial<PostType>) => void;
   post: PostType | null;
-  id: string | null| undefined;
+  id: string;
 };
 
 const EditDialogForm: React.FC<EditDialogFormProps> = ({
@@ -31,8 +31,6 @@ const EditDialogForm: React.FC<EditDialogFormProps> = ({
   const router = useRouter();
   const [editedPost, setEditedPost] = useState<Partial<PostType>>(post || {});
   const [submitting, setSubmitting] = useState(false);
-  // const searchParams = useSearchParams();
-  // const id = searchParams.get("id");
 
   useEffect(() => {
     setEditedPost(post || {});
@@ -82,6 +80,11 @@ const EditDialogForm: React.FC<EditDialogFormProps> = ({
     }
     // onClose();
   };
+  useEffect(() => {
+    if (id.length < 1) {
+      onClose();
+    }
+  }, [id, onClose]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -92,6 +95,7 @@ const EditDialogForm: React.FC<EditDialogFormProps> = ({
           {/* @ts-ignore */}
           <DialogClose as={Cross2Icon} onClick={onClose} />
         </DialogHeader>
+        {id ? <p>id: {id}</p> : null}
         <form onSubmit={handleSubmit}>
           <div>
             <input

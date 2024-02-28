@@ -18,16 +18,16 @@ const Profile: React.FC<ProfilePropsType> = ({
   handleEdit,
   handleDelete,
 }) => {
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
-
-  const openEditDialog = (post: PostType) => {
-    setSelectedPost(post);
-    setIsEditDialogOpen(true);
+  const [isSelectedPostID, setIsSelectedPostID] = useState<string>("");
+  const openEditDialog = (id: string) => {
+    setIsSelectedPostID(id);
+    setIsEditDialogOpen(!isEditDialogOpen);
   };
 
   const closeEditDialog = () => {
-    setSelectedPost(null);
+    setIsSelectedPostID("");
     setIsEditDialogOpen(false);
   };
 
@@ -37,7 +37,6 @@ const Profile: React.FC<ProfilePropsType> = ({
       setIsEditDialogOpen(false);
     }
   };
-
   return (
     <section className="w-full">
       <h1 className="head_text text-left">
@@ -49,9 +48,9 @@ const Profile: React.FC<ProfilePropsType> = ({
         {/* Prompt Card List */}
         {data.map((post: PostType) => (
           <PromptCard
-            key={post._id}
+            key={post.id}
             post={post}
-            handleEdit={() => openEditDialog(post)}
+            handleEdit={() => openEditDialog(post.id ?? "")}
             handleDelete={() => handleDelete && handleDelete(post)}
           />
         ))}
@@ -63,7 +62,7 @@ const Profile: React.FC<ProfilePropsType> = ({
         onClose={closeEditDialog}
         onSubmit={handleEditSubmit}
         post={selectedPost}
-        id={selectedPost?._id}
+        id={isSelectedPostID}
       />
     </section>
   );
