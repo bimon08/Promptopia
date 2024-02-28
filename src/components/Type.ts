@@ -1,5 +1,5 @@
 export type PostType = {
-  id?: string;
+  _id?: string;
   tag: string;
   prompt: string;
   image_url?: string;

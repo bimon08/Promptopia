@@ -1,5 +1,7 @@
 import PromptCard from "./PromptCard";
 import { PostType } from "./Type";
+import EditDialogForm from "./EditDialogForm";
+import { useState } from "react";
 
 type ProfilePropsType = {
   name: string;
@@ -7,16 +9,35 @@ type ProfilePropsType = {
   data: PostType[];
   handleEdit?: (post: PostType) => void;
   handleDelete?: (post: PostType) => void;
-  handleTagClick?: (postTag: string) => void;
 };
 
-const Profile = ({
+const Profile: React.FC<ProfilePropsType> = ({
   name,
   desc,
   data,
   handleEdit,
   handleDelete,
-}: ProfilePropsType) => {
+}) => {
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
+
+  const openEditDialog = (post: PostType) => {
+    setSelectedPost(post);
+    setIsEditDialogOpen(true);
+  };
+
+  const closeEditDialog = () => {
+    setSelectedPost(null);
+    setIsEditDialogOpen(false);
+  };
+
+  const handleEditSubmit = (postData: Partial<PostType>) => {
+    if (handleEdit && selectedPost) {
+      handleEdit({ ...selectedPost, ...postData });
+      setIsEditDialogOpen(false);
+    }
+  };
+
   return (
     <section className="w-full">
       <h1 className="head_text text-left">
@@ -30,11 +51,20 @@ const Profile = ({
           <PromptCard
             key={post._id}
             post={post}
-            handleEdit={() => handleEdit && handleEdit(post)}
+            handleEdit={() => openEditDialog(post)}
             handleDelete={() => handleDelete && handleDelete(post)}
           />
         ))}
       </div>
+
+      {/* Edit Dialog */}
+      <EditDialogForm
+        open={isEditDialogOpen}
+        onClose={closeEditDialog}
+        onSubmit={handleEditSubmit}
+        post={selectedPost}
+        id={selectedPost?._id}
+      />
     </section>
   );
 };

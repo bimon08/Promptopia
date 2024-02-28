@@ -33,6 +33,8 @@ const MyProfile: React.FC = () => {
   }, [session, status]);
 
   const handleEdit = (post: PostType) => {
+    // @ts-ignore
+    // FIXME: fix this ts error
     router.push(`/update-prompt?id=${post.id}`);
   };
 
@@ -45,6 +47,7 @@ const MyProfile: React.FC = () => {
       try {
         // @ts-ignore
         await axios.delete(`/api/prompt/${post.id.toString()}`);
+        // @ts-ignore
         const filteredPosts = posts.filter((p) => p.id !== post.id);
         setPosts(filteredPosts);
         toast.success("Prompt deleted successfully");

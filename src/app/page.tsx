@@ -19,9 +19,6 @@ const Home = () => {
         {"others'"} posts or creating your own to inspire others.
       </p>
       <p className="desc text-center">{bibleVerse}</p>
-
-      {/* You can replace <Feed /> with a component that displays the shared posts and related content */}
-      {/* Example: <SharedPostsFeed /> */}
       <Feed />
     </section>
   );
