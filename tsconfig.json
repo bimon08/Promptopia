@@ -46,6 +46,6 @@
     "app/profile/page.jsx",
     "src/utils/database.ts",
     "app/create-prompt/page.jsx"
-  ],
+, "src/components/Feed.tsx"  ],
   "exclude": ["node_modules"]
 }

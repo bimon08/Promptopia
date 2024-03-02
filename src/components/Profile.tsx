@@ -22,8 +22,12 @@ const Profile: React.FC<ProfilePropsType> = ({
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
   const [isSelectedPostID, setIsSelectedPostID] = useState<string>("");
   const openEditDialog = (id: string) => {
-    setIsSelectedPostID(id);
-    setIsEditDialogOpen(!isEditDialogOpen);
+    const post = data.find((post) => post.id === id);
+    if (post) {
+      setSelectedPost(post);
+      setIsSelectedPostID(id);
+      setIsEditDialogOpen(true);
+    }
   };
 
   const closeEditDialog = () => {

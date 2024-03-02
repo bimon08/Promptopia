@@ -1,13 +1,21 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { PromptCardList } from "./PromptCardList";
 import { toast } from "sonner";
 import axios from "axios";
-const Feed = () => {
-  const [allPosts, setAllPosts] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [searchedResults, setSearchedResults] = useState([]);
+import { PostType } from "./Type";
+
+interface FeedProps {
+  data: PostType[];
+  handleTagClick: (tagName: string) => void;
+}
+
+const Feed: React.FC = () => {
+  const [allPosts, setAllPosts] = useState<PostType[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchedResults, setSearchedResults] = useState<PostType[]>([]);
+
   const fetchPosts = async () => {
     try {
       const response = await axios.get("/api/prompt");
@@ -18,7 +26,7 @@ const Feed = () => {
       } else {
         toast.error("Failed to fetch prompts");
       }
-    } catch (error) {
+    } catch (error:any) {
       toast.error("An error occurred while fetching prompts:", error);
     }
   };
@@ -27,17 +35,17 @@ const Feed = () => {
     fetchPosts();
   }, []);
 
-  const filterPrompts = (searchtext) => {
+  const filterPrompts = (searchtext: string) => {
     const regex = new RegExp(searchtext);
     return allPosts.filter(
       (item) =>
-        regex.test(item.user?.username) ||
+        regex.test(item.user?.username||"") ||
         regex.test(item.tag) ||
-        regex.test(item.prompt),
+        regex.test(item.prompt)
     );
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
     setSearchText(searchTerm);
     const searchTimeout = setTimeout(() => {
@@ -47,7 +55,7 @@ const Feed = () => {
     clearTimeout(searchTimeout);
   };
 
-  const handleTagClick = (tagName) => {
+  const handleTagClick = (tagName: string) => {
     setSearchText(tagName);
 
     const searchResult = filterPrompts(tagName);

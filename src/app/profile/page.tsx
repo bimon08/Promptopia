@@ -33,7 +33,6 @@ const MyProfile: React.FC = () => {
   }, [session, status]);
 
   const handleEdit = (post: PostType) => {
-    // @ts-ignore
     // FIXME: fix this ts error
     router.push(`/update-prompt?id=${post.id}`);
   };

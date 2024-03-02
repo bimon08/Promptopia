@@ -2,29 +2,26 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { PostType } from "./Type";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
-  DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { Textarea } from "./ui/textarea";
 
 type EditDialogFormProps = {
   open: boolean;
   onClose: () => void;
-  onSubmit: (postData: Partial<PostType>) => void;
   post: PostType | null;
+  onSubmit: (postData: Partial<PostType>) => void;
   id: string;
 };
 
 const EditDialogForm: React.FC<EditDialogFormProps> = ({
   open,
   onClose,
-  onSubmit,
   post,
   id,
 }) => {
@@ -36,82 +33,90 @@ const EditDialogForm: React.FC<EditDialogFormProps> = ({
     setEditedPost(post || {});
   }, [post]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setEditedPost((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEditedPost((prev) => ({ ...prev, [name]: value }));
   };
 
-  // NOTE: Handle the form submission, including uploading a new image if selected, updating the edited post, and closing the dialog
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!id) {
       toast.message("Missing id!");
-      setSubmitting(false);
       return;
     }
 
     setSubmitting(true);
     try {
-      if (!post) {
+      if (!editedPost) {
         console.error("Missing post data");
         return;
       }
+      console.log(editedPost);
       const response = await axios.patch(`/api/prompt/${id}`, {
-        prompt: post.prompt,
-        tag: post.tag,
+        prompt: editedPost.prompt,
+        tag: editedPost.tag,
       });
 
       if (response.status === 200) {
-        router.push("/");
+        const {message} = response.data;
+        toast.success(message);
         onClose();
-        toast.success("Prompt updated successfully");
+        router.push("/");
       } else {
         toast.error("Failed to update Prompt");
       }
     } catch (error) {
-      console.log("Error occured while updating Prompt", error);
+      console.log("Error occurred while updating Prompt", error);
       toast.error("Failed to update post");
     } finally {
       setSubmitting(false);
-    }
-    // onClose();
-  };
-  useEffect(() => {
-    if (id.length < 1) {
       onClose();
     }
-  }, [id, onClose]);
+    
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
+      <div
+        className={`fixed inset-0 z-40 bg-white/5 backdrop-blur-lg ${
+          open ? "visible" : "hidden"
+        }`}
+      ></div>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit Post</DialogTitle>
-          {/* TODO: Fix this */}
-          {/* @ts-ignore */}
-          <DialogClose as={Cross2Icon} onClick={onClose} />
-        </DialogHeader>
-        {id ? <p>id: {id}</p> : null}
+        <DialogTitle>Edit Post</DialogTitle>
+
         <form onSubmit={handleSubmit}>
           <div>
-            <input
-              type="text"
+            <Textarea
               name="prompt"
               value={editedPost.prompt || ""}
               onChange={handleChange}
               placeholder="Prompt"
-              style={{ width: "100%", marginBottom: "1rem" }}
+              rows={10}
+              className="mb-4 w-full rounded-md border border-gray-300 p-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
+            />
+
+            <Textarea
+              name="tag"
+              value={editedPost.tag || ""}
+              onChange={handleChange}
+              placeholder="Type your message here."
+              className="mb-4 w-full resize-y rounded-md border border-gray-300 p-2 text-sm focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
-          <DialogFooter>
-            <button type="button" onClick={onClose}>
+          <DialogFooter className="flex-center mt-5 gap-4 border-t border-gray-100 pt-3">
+            <button
+              className="green_gradient cursor-pointer font-inter text-sm"
+              type="button"
+              onClick={onClose}
+            >
               Cancel
             </button>{" "}
-            <button type="submit">
+            <button
+              type="submit"
+              className="orange_gradient cursor-pointer font-inter text-sm"
+            >
               {submitting ? "Submitting..." : "Update Changes"}
             </button>
           </DialogFooter>

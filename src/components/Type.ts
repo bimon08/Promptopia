@@ -4,6 +4,7 @@ export type PostType = {
   tag: string;
   prompt: string;
   image_url?: string;
+  audio_url?: string;
   user?: {
     id?: string;
     image?: string;
@@ -25,4 +26,5 @@ export type UserType = {
   username: string;
   email: string;
   image: string;
+  id?:string
 };

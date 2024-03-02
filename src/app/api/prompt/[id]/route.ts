@@ -16,28 +16,34 @@ export const GET = async (request: NextRequest, { params }: ParamType) => {
     return new Response("Internal Server Error", { status: 500 });
   }
 };
-
 export const PATCH = async (request: NextRequest, { params }: ParamType) => {
   const reqBody = await request.json();
+  console.log("Request body:", reqBody); // Log the request body
+
   try {
     const isValid = await PromptSchema.safeParseAsync(reqBody);
+    console.log("Validation result:", isValid); // Log the validation result
 
     if (!isValid.success) {
-      console.log(isValid);
+      console.log("Validation failed. Errors:", isValid.error.issues); // Log validation errors
       return new Response(JSON.stringify(isValid.error.issues), {
         status: 400,
       });
     }
+
     const { prompt, tag, image_url } = isValid.data;
-    // Find the existing prompt by ID
-    console.log(image_url);
+    console.log("Parsed data:", { prompt, tag, image_url }); // Log the parsed data
+
     const existingPrompt = await prisma.prompts.findUnique({
       where: {
         id: params.id,
       },
     });
 
+    console.log("Existing prompt:", existingPrompt); // Log the existing prompt
+
     if (!existingPrompt) {
+      console.log("Prompt not found.");
       return new Response("Prompt not found", { status: 404 });
     }
 
@@ -51,16 +57,27 @@ export const PATCH = async (request: NextRequest, { params }: ParamType) => {
         image_url: image_url,
       },
     });
+
+    console.log("Updated prompt:", updatedPrompt); // Log the updated prompt
+
     if (!updatedPrompt) {
+      console.log("Error updating prompt.");
       return new Response("Error updating prompt", { status: 500 });
     }
-    return new Response("Successfully updated the Prompts", {
-      status: 200,
-    });
+
+    console.log("Prompt updated successfully.");
+    return new Response(
+      JSON.stringify({ message: "Prompt updated successfully" }),
+      {
+        status: 200,
+      },
+    );
   } catch (error) {
+    console.error("Error occurred while updating Prompt", error);
     return new Response("Error Updating Prompt", { status: 500 });
   }
 };
+
 
 export const DELETE = async (request: NextRequest, { params }: ParamType) => {
   try {

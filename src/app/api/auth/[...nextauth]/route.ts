@@ -1,9 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import User from "@src/models/user"; // Import User model with type
-import { connectToDB } from "@src/utils/database";
 import { prisma } from "prisma/client-prisma";
-import { JWT, JWTOptions } from "next-auth/jwt";
 
 type UserDocument = {
   id?: string;
@@ -13,12 +10,11 @@ type UserDocument = {
 };
 
 interface Session {
-  user: UserDocument; // Define type for session's user property
+  user: UserDocument;
   expires: string;
 }
 
 const handler = NextAuth({
-  // Apply type to NextAuth handler
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
@@ -26,12 +22,10 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    // fix this line below
-    // @ts-ignore
-    async session({ session, user }): Promise<Session | undefined | null> {
+    async session({ session, user }): Promise<Session> {
       try {
         if (!session) {
-          return null;
+          return { user: { name: "", email: "", image: "" }, expires: "" };
         }
         const isConnect = await prisma
           .$connect()
@@ -39,34 +33,32 @@ const handler = NextAuth({
           .catch(() => false);
         if (!isConnect) {
           console.log("Error connecting to database.");
-          return null;
+          return { user: { name: "", email: "", image: "" }, expires: "" };
         }
 
-        const user = await prisma.users.findUnique({
+        const dbUser = await prisma.users.findUnique({
           where: {
             email: session?.user?.email as string,
           },
         });
 
-        if (!user) {
-          return null;
+        if (!dbUser) {
+          return { user: { name: "", email: "", image: "" }, expires: "" };
         }
-        if (user) {
-          const NewSession = {
-            user: {
-              id: user.id,
-              name: user.username,
-              email: user.email,
-              image: user.image,
-            },
-            expires: session.expires,
-          };
+        const NewSession = {
+          user: {
+            id: dbUser.id,
+            name: dbUser.username,
+            email: dbUser.email,
+            image: dbUser.image,
+          },
+          expires: session.expires,
+        };
 
-          return NewSession;
-        }
+        return NewSession;
       } catch (error) {
         console.error("Error retrieving user from database:", error);
-        return null; // Return null on error
+        return { user: { name: "", email: "", image: "" }, expires: "" };
       }
     },
 
@@ -85,7 +77,6 @@ const handler = NextAuth({
             email: profile.email,
           },
         });
-        // const userExists = await User.findOne({ email: profile.email });
         if (!userExists) {
           await prisma.users
             .create({
