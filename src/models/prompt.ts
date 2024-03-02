@@ -6,10 +6,11 @@ export const PromptSchema = z.object({
     })
     .min(3, {
       message: "Prompt must be at least 3 characters long",
-    })
-    .max(500, {
-      message: "Prompt must be at most 500 characters long",
     }),
+  // .max(500, {
+  //   message: "Prompt must be at most 500 characters long",
+  // })
+  
   tag: z
     .string({
       required_error: "Tag is required",

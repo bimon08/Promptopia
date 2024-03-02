@@ -1,5 +1,7 @@
 import PromptCard from "./PromptCard";
 import { PostType } from "./Type";
+import EditDialogForm from "./EditDialogForm";
+import { useState } from "react";
 
 type ProfilePropsType = {
   name: string;
@@ -7,16 +9,38 @@ type ProfilePropsType = {
   data: PostType[];
   handleEdit?: (post: PostType) => void;
   handleDelete?: (post: PostType) => void;
-  handleTagClick?: (postTag: string) => void;
 };
 
-const Profile = ({
+const Profile: React.FC<ProfilePropsType> = ({
   name,
   desc,
   data,
   handleEdit,
   handleDelete,
-}: ProfilePropsType) => {
+}) => {
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+  const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
+  const [isSelectedPostID, setIsSelectedPostID] = useState<string>("");
+  const openEditDialog = (id: string) => {
+    const post = data.find((post) => post.id === id);
+    if (post) {
+      setSelectedPost(post);
+      setIsSelectedPostID(id);
+      setIsEditDialogOpen(true);
+    }
+  };
+
+  const closeEditDialog = () => {
+    setIsSelectedPostID("");
+    setIsEditDialogOpen(false);
+  };
+
+  const handleEditSubmit = (postData: Partial<PostType>) => {
+    if (handleEdit && selectedPost) {
+      handleEdit({ ...selectedPost, ...postData });
+      setIsEditDialogOpen(false);
+    }
+  };
   return (
     <section className="w-full">
       <h1 className="head_text text-left">
@@ -28,13 +52,22 @@ const Profile = ({
         {/* Prompt Card List */}
         {data.map((post: PostType) => (
           <PromptCard
-            key={post._id}
+            key={post.id}
             post={post}
-            handleEdit={() => handleEdit && handleEdit(post)}
+            handleEdit={() => openEditDialog(post.id ?? "")}
             handleDelete={() => handleDelete && handleDelete(post)}
           />
         ))}
       </div>
+
+      {/* Edit Dialog */}
+      <EditDialogForm
+        open={isEditDialogOpen}
+        onClose={closeEditDialog}
+        onSubmit={handleEditSubmit}
+        post={selectedPost}
+        id={isSelectedPostID}
+      />
     </section>
   );
 };

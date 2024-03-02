@@ -7,6 +7,7 @@ import { PostType } from "@src/components/Type";
 import Form from "@src/components/Form";
 import { toast } from "sonner";
 import axios from "axios";
+import { Dialog } from "@src/components/ui/dialog";
 
 const UpdatePrompt = () => {
   const router = useRouter();
@@ -14,6 +15,8 @@ const UpdatePrompt = () => {
   const promptId = searchParams.get("id");
   const [post, setPost] = useState<PostType>();
   const [submitting, setIsSubmitting] = useState(false);
+
+  
   const getPromptDetails = useCallback(async () => {
     try {
       const response = await axios.get(`/api/prompt/${promptId}`);
@@ -75,6 +78,8 @@ const UpdatePrompt = () => {
 
   return (
     <>
+      
+
       {post && (
         <Form
           type="Save"

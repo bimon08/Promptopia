@@ -27,7 +27,6 @@ const CreatePrompt = () => {
           method: "POST",
           body: JSON.stringify({
             prompt: post.prompt,
-            // @ts-ignore
             userId: session?.user?.id,
             tag: post.tag,
             image_url: post.image_url,
@@ -36,9 +35,6 @@ const CreatePrompt = () => {
         if (response.ok) {
           toast.success("Prompt created successfully!");
           router.replace("/");
-          return;
-        } else {
-          toast.info("Failed to create prompt. Please try again.");
           return;
         }
       }

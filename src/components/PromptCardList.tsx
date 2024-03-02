@@ -4,7 +4,7 @@ import { PostType } from "./Type";
 interface PromptCardListProps {
   data: PostType[];
   handleTagClick?: (tag: string) => void;
-  handleDelete: (id: string) => void;
+  handleDelete?: (id: string) => void;
 }
 
 export const PromptCardList = ({
