@@ -6,8 +6,8 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { PostType } from "./Type";
-import UserProfile from "./UserProfile"; // Assuming this is a new subcomponent
-import PostContent from "./PostContent"; // Assuming this is a new subcomponent
+import UserProfile from "./UserProfile"; 
+import PostContent from "./PostContent"; 
 import { toast } from "sonner";
 
 type PromptCardProps = {
@@ -15,6 +15,7 @@ type PromptCardProps = {
   handleEdit?: () => void;
   handleDelete?: () => void;
   handleTagClick?: (postTag: string) => void;
+  
 };
 
 const PromptCard = ({

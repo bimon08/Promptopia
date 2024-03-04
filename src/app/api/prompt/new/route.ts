@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "prisma/client-prisma";
 
 export async function POST(request: NextRequest) {
-  const { userId, prompt, tag, image_url } = await request.json();
+  const { userId, prompt, tag, image_url ,audio_url} = await request.json();
   try {
     const newPrompt = await prisma.prompts.create({
       data: {
@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
         prompt: prompt,
         tag: tag,
         image_url: image_url,
+        audio_url: audio_url,
       },
     });
     return new Response(JSON.stringify(newPrompt), { status: 201 });
