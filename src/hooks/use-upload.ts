@@ -69,12 +69,14 @@ export const useUpload = () => {
 
   useEffect(() => {
     if (selectedFile) {
+      console.log("Selected file");
       handleUploadImage();
     }
   }, [selectedFile, handleUploadImage]);
 
   useEffect(() => {
     if (selectedAudio) {
+      console.log("Selected audio");
       handleUploadAudio();
     }
   }, [selectedAudio, handleUploadAudio]);

@@ -7,12 +7,9 @@ import Form from "@src/components/Form";
 import { toast } from "sonner";
 import { PostType } from "@src/components/Type";
 
-
-
 const CreatePrompt = () => {
   const router = useRouter();
   const { data: session } = useSession();
-
   const [submitting, setIsSubmitting] = useState<boolean>(false);
   const [post, setPost] = useState<PostType>({
     prompt: "",
@@ -41,7 +38,7 @@ const CreatePrompt = () => {
         });
         if (response.ok) {
           toast.success("Prompt created successfully!");
-          router.replace("/");
+          router.push("/");
           return;
         }
       }
@@ -51,8 +48,6 @@ const CreatePrompt = () => {
       setIsSubmitting(false);
     }
   };
-
-
 
   return (
     <Form
