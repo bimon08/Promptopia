@@ -78,17 +78,16 @@ const Form = ({
       handleUpload();
     }
   }, [selectedFile, selectedAudio, handleUpload]);
-
-  useEffect(() => {
+  // temporary fix for the ts error
+  const handlePostChange = useCallback(() => {
     if (downloadURL) {
       setPost({
         ...post,
-        image_url: downloadURL,
-        audio_url: downloadURL,
+        image_url: selectedFile ? downloadURL : "",
+        audio_url: selectedAudio ? downloadURL : "",
       });
     }
-  }, [downloadURL, setPost, post]);
-
+  }, [downloadURL, selectedFile, selectedAudio, setPost, post]);
 
   return (
     <section className="flex-start w-full max-w-full flex-col">
@@ -178,6 +177,7 @@ const Form = ({
           <button
             type="submit"
             disabled={submitting}
+            onClick={handlePostChange}
             className="bg-primary-orange rounded-full px-5 py-1.5 text-sm text-black"
           >
             {submitting ? "Loading" : type}
