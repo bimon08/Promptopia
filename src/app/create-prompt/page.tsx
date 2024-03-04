@@ -7,6 +7,8 @@ import Form from "@src/components/Form";
 import { toast } from "sonner";
 import { PostType } from "@src/components/Type";
 
+
+
 const CreatePrompt = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -49,6 +51,8 @@ const CreatePrompt = () => {
       setIsSubmitting(false);
     }
   };
+
+
 
   return (
     <Form

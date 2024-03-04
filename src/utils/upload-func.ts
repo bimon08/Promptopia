@@ -1,7 +1,7 @@
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "./firebase";
 
-export const upload_image_func = async ({
+export const upload_func = async ({
   selectedFile,
   email,
 }: {

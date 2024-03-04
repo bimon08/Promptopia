@@ -3,7 +3,7 @@ import { PostType } from "./Type";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { upload_file_func } from "@src/utils/upload_image_func";
+import { upload_file_func } from "@src/utils/upload_file_func";
 
 interface FormPropsType {
   type: string;
@@ -25,43 +25,42 @@ const Form = ({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedAudio, setSelectedAudio] = useState<File | null>(null);
 
- const handleUpload = useCallback(async () => {
-  try {
-    console.log("uploading file...");
-    toast.loading("Uploading file...");
-    let downloadurl;
-    let uploadCompleted = false; // Flag to track upload completion
-    
-    if (selectedFile && !uploadCompleted) {
-      downloadurl = await upload_file_func({
-        selectedFile,
-        email: session?.user?.email ?? "",
-        fileType: "image",
-      });
-      toast.success("Image uploaded successfully");
-      console.log(downloadurl);
-      uploadCompleted = true; // Set flag to true after image upload
-    }
+  const handleUpload = useCallback(async () => {
+    try {
+      console.log("uploading file...");
+      toast.loading("Uploading file...");
+      let downloadurl;
+      let uploadCompleted = false; // Flag to track upload completion
 
-    if (selectedAudio && !uploadCompleted) {
-      downloadurl = await upload_file_func({
-        selectedFile: selectedAudio,
-        email: session?.user?.email ?? "",
-        fileType: "audio",
-      });
-      toast.success("Audio uploaded successfully");
-      uploadCompleted = true; // Set flag to true after audio upload
-    }
-    
-    setDownloadURL(downloadurl || null);
-  } catch (error: any) {
-    toast.error(error.message);
-  } finally {
-    toast.dismiss(); // Dismiss the loading toast message
-  }
-}, [selectedFile, selectedAudio, session?.user?.email]);
+      if (selectedFile && !uploadCompleted) {
+        downloadurl = await upload_file_func({
+          selectedFile,
+          email: session?.user?.email ?? "",
+          fileType: "image",
+        });
+        toast.success("Image uploaded successfully");
+        console.log(downloadurl);
+        uploadCompleted = true;
+      }
 
-  
+      if (selectedAudio && !uploadCompleted) {
+        downloadurl = await upload_file_func({
+          selectedFile: selectedAudio,
+          email: session?.user?.email ?? "",
+          fileType: "audio",
+        });
+        toast.success("Audio uploaded successfully");
+        uploadCompleted = true;
+      }
+
+      setDownloadURL(downloadurl || null);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      toast.dismiss();
+    }
+  }, [selectedFile, selectedAudio, session?.user?.email]);
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setSelectedFile(e.target.files[0]);
@@ -75,16 +74,21 @@ const Form = ({
   };
 
   useEffect(() => {
-   if (selectedFile||selectedAudio){
-    handleUpload()
-   }
+    if (selectedFile || selectedAudio) {
+      handleUpload();
+    }
   }, [selectedFile, selectedAudio, handleUpload]);
 
   useEffect(() => {
     if (downloadURL) {
-      setPost({ ...post, image_url: downloadURL });
+      setPost({
+        ...post,
+        image_url: downloadURL,
+        audio_url: downloadURL,
+      });
     }
   }, [downloadURL, setPost, post]);
+
 
   return (
     <section className="flex-start w-full max-w-full flex-col">
@@ -143,7 +147,12 @@ const Form = ({
             <span className="mt-2 text-base leading-3">
               {selectedFile ? "Image Selected" : "Select an Image"}
             </span>
-            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </label>
           <label className="text-blue border-blue flex w-64 cursor-pointer flex-col items-center rounded-lg border bg-white px-4 py-6 uppercase tracking-wide shadow-lg ">
             <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 20 20">
@@ -152,7 +161,12 @@ const Form = ({
             <span className="mt-2 text-base leading-3">
               {selectedAudio ? "Audio Selected" : "Select an Audio File"}
             </span>
-            <input type="file" accept="audio/*" className="hidden" onChange={handleAudioChange} />
+            <input
+              type="file"
+              accept="audio/*"
+              className="hidden"
+              onChange={handleAudioChange}
+            />
           </label>
         </div>
 

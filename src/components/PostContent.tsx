@@ -7,12 +7,13 @@ type PostContentProps = {
     image_url?: string;
     prompt?: string;
     tag?: string;
-    audio_url?:string
+    audio_url?: string;
   };
   handleTagClick?: (postTag: string) => void;
 };
 
 const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
+  console.log(post.audio_url);
   return (
     <>
       {post.image_url && (
@@ -36,9 +37,7 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
                 "my-4",
                 "text-sm",
                 "text-gray-700",
-                line.includes(
-                  " ",
-                ) && "text-justify",
+                line.includes(" ") && "text-justify",
               )}
             >
               {line}
@@ -62,8 +61,7 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
         #{post.tag}
       </p>
     </>
-  
-  )
-}
+  );
+};
 
 export default PostContent;

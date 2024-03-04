@@ -8,7 +8,7 @@ export const upload_file_func = async ({
 }: {
   selectedFile: File | null;
   email: string;
-  fileType?: string; // fileType indicates whether it's "image" or "audio"
+  fileType?: "image" | "audio"; 
 }) => {
   if (!selectedFile) {
     throw new Error("No file selected");
