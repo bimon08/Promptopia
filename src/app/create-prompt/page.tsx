@@ -16,6 +16,7 @@ const CreatePrompt = () => {
     prompt: "",
     tag: "",
     image_url: "",
+    audio_url: "",
   });
 
   const createPrompt = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -27,9 +28,13 @@ const CreatePrompt = () => {
           method: "POST",
           body: JSON.stringify({
             prompt: post.prompt,
+            // @ts-ignore
+            // FIXME: fix this ts error
+            // Update the userId property to use the correct property from session?.user
             userId: session?.user?.id,
             tag: post.tag,
             image_url: post.image_url,
+            audio_url: post.audio_url,
           }),
         });
         if (response.ok) {

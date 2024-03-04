@@ -16,6 +16,7 @@ const MyProfile: React.FC = () => {
     const fetchPosts = async () => {
       try {
         // @ts-ignore
+        // FIXME: fix this ts error
         const response = await fetch(`/api/users/${session?.user.id}/posts`);
         if (!response.ok) {
           throw new Error("Failed to fetch posts");
@@ -29,12 +30,18 @@ const MyProfile: React.FC = () => {
       }
     };
     // @ts-ignore
+    // FIXME: fix this ts error
     if (session?.user.id && status !== "loading") fetchPosts();
   }, [session, status]);
 
   const handleEdit = (post: PostType) => {
-    // FIXME: fix this ts error
-    router.push(`/update-prompt?id=${post.id}`);
+    if (post.id !== undefined) {
+      router.push(`/update-prompt?id=${post.id}`);
+    } else {
+      console.error(
+        "Post id is undefined, cannot navigate to the update page.",
+      );
+    }
   };
 
   const handleDelete = async (post: PostType) => {
@@ -42,17 +49,22 @@ const MyProfile: React.FC = () => {
       "Are you sure you want to delete this prompt?",
     );
     if (hasConfirmed) {
-      // TODO: Handle post._id
+      // Directly check if post.id is undefined
+      if (typeof post.id === "undefined") {
+        console.error("Cannot delete the prompt as the post ID is undefined.");
+        toast.error("Failed to delete prompt: Post ID is undefined.");
+        return; // Abort the deletion process
+      }
+
+      // Proceed with the deletion process since post.id is confirmed to be defined
       try {
-        // @ts-ignore
         await axios.delete(`/api/prompt/${post.id.toString()}`);
-        // @ts-ignore
         const filteredPosts = posts.filter((p) => p.id !== post.id);
         setPosts(filteredPosts);
         toast.success("Prompt deleted successfully");
       } catch (error) {
         console.error("Error deleting prompt:", error);
-        toast.error("Failed to delete prompt");
+        toast.error("Failed to delete prompt"); 
       }
     }
   };

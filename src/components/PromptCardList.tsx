@@ -13,13 +13,16 @@ export const PromptCardList = ({
 }: PromptCardListProps) => {
   return (
     <div className="prompt_layout mt-16">
-      {data.map((post) => (
-        <PromptCard
-          key={post._id}
-          post={post}
-          handleTagClick={handleTagClick}
-        />
-      ))}
+      {data.map((post) => {
+        return (
+          <PromptCard
+            key={post._id}
+            post={post}
+            handleTagClick={handleTagClick}
+          />
+        
+        )
+      })}
     </div>
   );
 };

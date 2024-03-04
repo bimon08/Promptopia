@@ -60,7 +60,6 @@ const Profile: React.FC<ProfilePropsType> = ({
         ))}
       </div>
 
-      {/* Edit Dialog */}
       <EditDialogForm
         open={isEditDialogOpen}
         onClose={closeEditDialog}

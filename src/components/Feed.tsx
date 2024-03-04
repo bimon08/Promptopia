@@ -42,6 +42,7 @@ const Feed: React.FC = () => {
         regex.test(item.user?.username||"") ||
         regex.test(item.tag) ||
         regex.test(item.prompt)
+      
     );
   };
 
