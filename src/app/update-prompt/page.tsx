@@ -16,7 +16,6 @@ const UpdatePrompt = () => {
   const [post, setPost] = useState<PostType>();
   const [submitting, setIsSubmitting] = useState(false);
 
-  
   const getPromptDetails = useCallback(async () => {
     try {
       const response = await axios.get(`/api/prompt/${promptId}`);
@@ -78,12 +77,11 @@ const UpdatePrompt = () => {
 
   return (
     <>
-      
-
       {post && (
         <Form
           type="Save"
           post={post as PostType}
+          // @ts-ignore
           setPost={setPost}
           submitting={submitting}
           handleSubmit={updatePrompt}

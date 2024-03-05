@@ -9,7 +9,7 @@ export const usePrompt = (url?: string) => {
   const getPrompt = useCallback(async () => {
     try {
       const response = await axios.get(
-        url ? `${baseUrl}/url` : `${baseUrl}/api/prompt`,
+        url ? `${baseUrl}/${url}` : `${baseUrl}/api/prompt`,
       );
       if (response.status === 200) {
         const data = await response.data;
