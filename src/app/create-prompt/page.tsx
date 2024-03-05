@@ -51,6 +51,7 @@ const CreatePrompt = () => {
     <Form
       type="Create"
       post={post}
+      // @ts-ignore
       setPost={setPost}
       submitting={submitting}
       handleSubmit={createPrompt}
