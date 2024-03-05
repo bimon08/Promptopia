@@ -17,6 +17,8 @@ export type SessionType = {
   user: {
     id: string;
     image: string;
+    name?: string | null | undefined;
+    email?: string | null | undefined;
   };
   expires: string;
 };

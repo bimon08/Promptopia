@@ -1,92 +1,61 @@
 import { upload_file_func } from "@src/utils/upload_file_func";
 import { useSession } from "next-auth/react";
-import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import { toast } from "sonner";
 
 export const useUpload = () => {
   const { data: session } = useSession();
-  const [imageUrl, setImageUrl] = useState<string | null>("");
-  const [audioUrl, setAudioUrl] = useState<string | null>("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedAudio, setSelectedAudio] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const handleUploadImage = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      if (selectedFile) {
-        const imageDownloadUrl = await upload_file_func({
-          selectedFile,
-          email: session?.user?.email ?? "",
-          fileType: "image",
-        });
-        toast.success("Image uploaded successfully");
-        setImageUrl(imageDownloadUrl || null);
-        setIsLoading(false);
+
+  const handleUpload = useCallback(
+    async (file: File, fileType: "image" | "audio") => {
+      if (!session?.user?.email) {
+        toast.error("User email is not available.");
         return;
       }
-    } catch (error: any) {
-      toast.error(error.message);
-      setIsLoading(false);
-      return;
-    } finally {
-      setIsLoading(false);
-      selectedFile && setSelectedFile(null);
-    }
-  }, [selectedFile, session?.user?.email]);
-  const handleUploadAudio = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      if (selectedAudio) {
-        const audioDownloadUrl = await upload_file_func({
-          selectedFile: selectedAudio,
-          email: session?.user?.email ?? "",
-          fileType: "audio",
+      let toastId;
+      try {
+        setIsLoading(true);
+        const toastId = toast.loading("Uploading...");
+        console.log(file);
+        const downloadUrl = await upload_file_func({
+          file,
+          userEmail: session.user.email,
+          fileType,
         });
-        toast.success("Audio uploaded successfully");
-        setAudioUrl(audioDownloadUrl || null);
+        toast.success(
+          `${
+            fileType.charAt(0).toUpperCase() + fileType.slice(1)
+          } uploaded successfully`,
+        );
+        fileType === "image"
+          ? setImageUrl(downloadUrl)
+          : setAudioUrl(downloadUrl);
+      } catch (error: any) {
+        toast.error(error.message);
+      } finally {
         setIsLoading(false);
+        toast.dismiss(toastId);
       }
-    } catch (error: any) {
-      toast.error(error.message);
-      setIsLoading(false);
-    } finally {
-      setIsLoading(false);
-      selectedAudio && setSelectedAudio(null);
-    }
-  }, [selectedAudio, session?.user?.email]);
+    },
+    [session?.user?.email],
+  );
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setSelectedFile(e.target.files[0]);
-    }
-  };
+  const handleFileChange =
+    (fileType: "image" | "audio") => (e: ChangeEvent<HTMLInputElement>) => {
+      toast.success("Code is up and running");
+      console.log("File changed:", e.target.files);
+      const file = e.target.files?.[0];
+      if (file) handleUpload(file, fileType);
+    };
 
-  const handleAudioChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setSelectedAudio(e.target.files[0]);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedFile) {
-      console.log("Selected file");
-      handleUploadImage();
-    }
-  }, [selectedFile, handleUploadImage]);
-
-  useEffect(() => {
-    if (selectedAudio) {
-      console.log("Selected audio");
-      handleUploadAudio();
-    }
-  }, [selectedAudio, handleUploadAudio]);
   return {
-    imageUrl: imageUrl,
-    audioUrl: audioUrl,
-    imageChange: handleFileChange,
-    audioChange: handleAudioChange,
-    audioFile: selectedAudio,
-    imageFile: selectedFile,
-    loading: isLoading,
+    imageUrl,
+    audioUrl,
+    handleImageChange: handleFileChange("image"),
+    handleAudioChange: handleFileChange("audio"),
+    isLoading,
   };
 };

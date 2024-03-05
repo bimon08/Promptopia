@@ -6,16 +6,14 @@ import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { PostType } from "./Type";
-import UserProfile from "./UserProfile"; 
-import PostContent from "./PostContent"; 
-import { toast } from "sonner";
+import UserProfile from "./UserProfile";
+import PostContent from "./PostContent";
 
 type PromptCardProps = {
   post: PostType;
   handleEdit?: () => void;
   handleDelete?: () => void;
   handleTagClick?: (postTag: string) => void;
-  
 };
 
 const PromptCard = ({
@@ -44,11 +42,12 @@ const PromptCard = ({
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(""), 3000);
-  }, [post.prompt,]);
+  }, [post.prompt]);
 
   // TODO: Check if the current user is the owner of the post and is viewing their own profile
+  const isOwnerViewing =
   // @ts-ignore
-  const isOwnerViewing = session?.user?.id === post?.user?.id && pathName === "/profile";
+    session?.user?.id === post?.user?.id && pathName === "/profile";
 
   return (
     <div className="prompt_card">
