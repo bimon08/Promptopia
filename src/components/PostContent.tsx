@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@src/lib/utils";
 
@@ -13,7 +13,55 @@ type PostContentProps = {
 };
 
 const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
-  console.log(post.audio_url);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    const handleAudioPlay = () => {
+      document.querySelectorAll("audio").forEach((audio) => {
+        if (audio !== audioRef.current) {
+          audio.pause();
+        }
+      });
+    };
+
+    const currentAudio = audioRef.current;
+    currentAudio?.addEventListener("play", handleAudioPlay);
+
+    return () => {
+      currentAudio?.removeEventListener("play", handleAudioPlay);
+    };
+  }, []);
+
+  const handleAudioClick = () => {
+    console.log("Audio reference:", audioRef.current);
+    if (audioRef.current) {
+      if (audioRef.current.paused || audioRef.current.src !== post.audio_url) {
+        audioRef.current.src = post.audio_url || "";
+
+        // Start with a very low volume
+        audioRef.current.volume = 0.01;
+        console.log("Starting volume:", audioRef.current.volume);
+
+        // Play the audio
+        audioRef.current.play();
+
+        // Gradually increase the volume over time
+        let currentVolume = 0.01;
+        const increaseVolume = setInterval(() => {
+          if (audioRef.current && audioRef.current.volume < 1) {
+            audioRef.current.volume = currentVolume;
+            console.log("Current volume:", audioRef.current.volume);
+            currentVolume += 0.1; // Increase volume incrementally
+          } else {
+            clearInterval(increaseVolume);
+          }
+        }, 100); // Adjust the interval as needed
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  };
+
   return (
     <>
       {post.image_url && (
@@ -47,10 +95,16 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
       )}
       {post.audio_url && (
         <div className="mt-4">
-          <audio controls className="w-full">
+          <audio controls ref={audioRef} className="w-full">
             <source src={post.audio_url} type="audio/mpeg" />
             Your browser does not support the audio element.
           </audio>
+          <button onClick={handleAudioClick}>
+            {audioRef.current?.paused ||
+            audioRef.current?.src !== post.audio_url
+              ? "Play"
+              : "Pause"}
+          </button>
         </div>
       )}
 

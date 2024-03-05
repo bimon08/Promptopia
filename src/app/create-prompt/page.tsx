@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Form from "@src/components/Form";
@@ -18,7 +18,7 @@ const CreatePrompt = () => {
     audio_url: "",
   });
 
-  const createPrompt = async (e: ChangeEvent<HTMLInputElement>) => {
+  const createPrompt = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
