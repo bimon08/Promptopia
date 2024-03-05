@@ -8,7 +8,7 @@ type ProfilePropsType = {
   desc: string;
   data: PostType[];
   handleEdit?: (post: PostType) => void;
-  handleDelete?: (post: PostType) => void;
+  handleDelete?: (id: string) => void;
 };
 
 const Profile: React.FC<ProfilePropsType> = ({
@@ -55,7 +55,9 @@ const Profile: React.FC<ProfilePropsType> = ({
             key={post.id}
             post={post}
             handleEdit={() => openEditDialog(post.id ?? "")}
-            handleDelete={() => handleDelete && handleDelete(post)}
+            handleDelete={() => {
+              handleDelete && post.id && handleDelete(post.id);
+            }}
           />
         ))}
       </div>

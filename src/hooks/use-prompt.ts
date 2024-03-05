@@ -1,13 +1,16 @@
 import { PostType } from "@src/components/Type";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export const usePrompt = () => {
+export const usePrompt = (url?: string) => {
   const [data, setData] = useState<PostType[]>([]);
-  async function getPrompt() {
+  const baseUrl = process.env.NEXTAUTH_URL as string;
+  const getPrompt = useCallback(async () => {
     try {
-      const response = await axios.get("/api/prompt");
+      const response = await axios.get(
+        url ? `${baseUrl}/url` : `${baseUrl}/api/prompt`,
+      );
       if (response.status === 200) {
         const data = await response.data;
         setData(data);
@@ -17,16 +20,17 @@ export const usePrompt = () => {
         return;
       }
     } catch (error: any) {
-      toast.error("An error occurred while fetching prompts:", error);
+      toast.error(error.message);
       return;
     }
-  }
+  }, [url, baseUrl]);
+
   function refetch() {
-    console.log("Refetching prompts...");
     getPrompt();
   }
   useEffect(() => {
     getPrompt();
-  }, []);
+  }, [getPrompt]);
+
   return { data, refetch };
 };

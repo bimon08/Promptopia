@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Form from "@src/components/Form";
 import { toast } from "sonner";
 import { PostType } from "@src/components/Type";
+import axios from "axios";
 
 const CreatePrompt = () => {
   const router = useRouter();
@@ -23,20 +24,17 @@ const CreatePrompt = () => {
     setIsSubmitting(true);
     try {
       if (session?.user) {
-        const response = await fetch("/api/prompt/new", {
-          method: "POST",
-          body: JSON.stringify({
-            prompt: post.prompt,
-            // @ts-ignore
-            // FIXME: fix this ts error
-            // Update the userId property to use the correct property from session?.user
-            userId: session?.user?.id,
-            tag: post.tag,
-            image_url: post.image_url,
-            audio_url: post.audio_url,
-          }),
+        const response = await axios.post("/api/prompt/new", {
+          prompt: post.prompt,
+          // @ts-ignore
+          // FIXME: fix this ts error
+          // Update the userId property to use the correct property from session?.user
+          userId: session?.user?.id,
+          tag: post.tag,
+          image_url: post.image_url,
+          audio_url: post.audio_url,
         });
-        if (response.ok) {
+        if (response.status === 201) {
           toast.success("Prompt created successfully!");
           router.push("/");
           return;
