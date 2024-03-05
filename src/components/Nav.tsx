@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 const Nav = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -17,7 +18,7 @@ const Nav = () => {
       if (!res) return;
       setProviders(res);
     } catch (error) {
-      console.error("Error fetching providers:", error);
+      toast.error("Error fetching providers");
     }
   }
   useEffect(() => {

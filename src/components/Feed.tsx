@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, ChangeEvent } from "react";
 import { PromptCardList } from "./PromptCardList";
-import { toast } from "sonner";
-import axios from "axios";
 import { PostType } from "./Type";
 import { usePrompt } from "@src/hooks/use-prompt";
 
@@ -13,11 +11,9 @@ interface FeedProps {
 }
 
 const Feed: React.FC = () => {
-  // const [allPosts, setAllPosts] = useState<PostType[]>([]);
   const [searchText, setSearchText] = useState<string>("");
   const [searchedResults, setSearchedResults] = useState<PostType[]>([]);
   const { data: allPosts } = usePrompt();
-
   const filterPrompts = (searchtext: string) => {
     const regex = new RegExp(searchtext);
     return allPosts.filter(

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 
 export const usePrompt = (url?: string) => {
   const [data, setData] = useState<PostType[]>([]);
-  const baseUrl = process.env.NEXTAUTH_URL as string;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL as string;
   const getPrompt = useCallback(async () => {
     try {
       const response = await axios.get(
@@ -20,6 +20,8 @@ export const usePrompt = (url?: string) => {
         return;
       }
     } catch (error: any) {
+      console.log(error.message);
+
       toast.error(error.message);
       return;
     }
