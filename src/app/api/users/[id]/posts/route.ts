@@ -1,6 +1,5 @@
 import { ParamType } from "@src/app/api/_lib/type";
-import Prompt from "@src/models/prompt";
-import { connectToDB } from "@src/utils/database";
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "prisma/client-prisma";
 

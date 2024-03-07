@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { PostType } from "./Type";
 import { useUpload } from "@src/hooks/use-upload";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 interface FormProps {
   type: string;
   post: PostType;
   setPost: React.Dispatch<React.SetStateAction<PostType>>;
   submitting: boolean;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: any;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -18,6 +20,7 @@ const Form: React.FC<FormProps> = ({
   submitting,
   handleSubmit,
 }) => {
+  const [tags, setTags] = useState<string[]>([]);
   const {
     handleImageChange,
     handleAudioChange,
@@ -34,8 +37,23 @@ const Form: React.FC<FormProps> = ({
     }));
   }, [audioUrl, imageUrl, setPost]);
 
+  const handleAddTag = () => {
+    const inputElement = document.getElementById(
+      "tagInput",
+    ) as HTMLInputElement;
+    const newTag = inputElement.value.trim();
+    if (newTag && !tags.includes(newTag)) {
+      setTags([...tags, newTag]);
+      inputElement.value = "";
+    }
+  };
+
+  const handleTagRemove = (tag: string) => {
+    setTags(tags.filter((t) => t !== tag));
+  }
+
   return (
-    <section className="flex-start w-full max-w-full flex-col">
+    <section className="flex-start w-full max-w-full flex-col ">
       <h1 className="head_text text-left">
         <span className="blue_gradient">{type} Post</span>
       </h1>
@@ -52,7 +70,7 @@ const Form: React.FC<FormProps> = ({
           <span className="font-satoshi text-base font-semibold text-gray-700">
             Your AI Prompt
           </span>
-          <textarea
+          <Textarea
             value={post.prompt}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
               setPost({ ...post, prompt: e.target.value })
@@ -70,15 +88,37 @@ const Form: React.FC<FormProps> = ({
               (#product, #webdevelopment, #idea, etc.)
             </span>
           </span>
-          <textarea
-            value={post.tag}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setPost({ ...post, tag: e.target.value })
-            }
-            placeholder="#Tag"
-            required
-            className="form_input"
-          />
+          <div className="flex items-center  gap-2">
+            {tags.map((tag) => (
+              <div
+                key={tag}
+                className="flex items-center  h-4 rounded-md text-sm font-medium text-gray-700"
+              >
+                {tag}
+                <button
+                  type="button"
+                  className="ml-2 text-black  rounded-full hover:text-gray-700"
+                  onClick={() => handleTagRemove(tag)}
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+            <div className="flex items-center">
+              <Textarea
+                id="tagInput"
+                placeholder="Add a tag"
+                className="form_input"
+              />
+              <button
+                type="button"
+                className="ml-2 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+                onClick={handleAddTag}
+              >
+                +
+              </button>
+            </div>
+          </div>
         </label>
 
         <div className="bg-grey-lighter flex h-auto w-full items-center justify-center">
@@ -118,16 +158,12 @@ const Form: React.FC<FormProps> = ({
         </div>
 
         <div className="flex-end mx-3 mb-5 gap-4">
-          <Link href="/" className="text-sm text-gray-500">
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            disabled={submitting || isLoading || !!imageUrl || !!audioUrl}
-            className="bg-primary-orange rounded-full px-5 py-1.5 text-sm text-black"
-          >
+          <Button>
+            <Link href="/">Cancel</Link>
+          </Button>
+          <Button type="submit" disabled={submitting || isLoading}>
             {submitting ? "Loading" : type}
-          </button>
+          </Button>
         </div>
       </form>
     </section>

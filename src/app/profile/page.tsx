@@ -12,27 +12,27 @@ const MyProfile: React.FC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const [posts, setPosts] = useState<PostType[]>([]);
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        // @ts-ignore
-        // FIXME: fix this ts error
-        const response = await fetch(`/api/users/${session?.user.id}/posts`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-        const data = await response.json();
 
-        setPosts(data);
-      } catch (error) {
-        console.error("Error fetching posts:", error);
-        toast.error("Failed to fetch posts");
-      }
-    };
-    // @ts-ignore
-    // FIXME: fix this ts error
-    if (session?.user.id && status !== "loading") fetchPosts();
-  }, [session, status]);
+
+ useEffect(() => {
+  const fetchPosts = async () => {
+    try {
+      const response = await fetch(`/api/users/${session?.user.id}/posts`);
+      if (!response.ok) throw new Error("Failed to fetch posts");
+      const data = await response.json();
+      setPosts(data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+      toast.error("Failed to fetch posts");
+    }
+  };
+   if (session?.user.id) {
+     if (status === "authenticated") {
+       fetchPosts();
+     }
+   }
+   
+}, [session?.user.id, status]);
 
   const handleEdit = (post: PostType) => {
     if (post.id !== undefined) {

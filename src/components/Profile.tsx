@@ -2,6 +2,7 @@ import PromptCard from "./PromptCard";
 import { PostType } from "./Type";
 import EditDialogForm from "./EditDialogForm";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type ProfilePropsType = {
   name: string;
@@ -18,6 +19,7 @@ const Profile: React.FC<ProfilePropsType> = ({
   handleEdit,
   handleDelete,
 }) => {
+  const router = useRouter();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
   const [isSelectedPostID, setIsSelectedPostID] = useState<string>("");
@@ -41,6 +43,13 @@ const Profile: React.FC<ProfilePropsType> = ({
       setIsEditDialogOpen(false);
     }
   };
+
+
+
+ const handleEditClick = (post: PostType) => {
+   router.push(`/update-prompt?id=${post.id}`);
+ };
+
   return (
     <section className="w-full">
       <h1 className="head_text text-left">
@@ -49,13 +58,13 @@ const Profile: React.FC<ProfilePropsType> = ({
       <p className="desc text-left">{desc}</p>
 
       <div className="prompt_layout mt-10">
-        {/* Prompt Card List */}
         {data.map((post: PostType) => (
           <PromptCard
             key={post.id}
             post={post}
-            handleEdit={() => openEditDialog(post.id ?? "")}
+                handleEdit={() => handleEditClick(post)}
             handleDelete={() => handleDelete && handleDelete(post)}
+            handleTagClick={() => null}
           />
         ))}
       </div>

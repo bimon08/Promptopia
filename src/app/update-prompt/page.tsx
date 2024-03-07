@@ -13,8 +13,13 @@ const UpdatePrompt = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const promptId = searchParams.get("id");
-  const [post, setPost] = useState<PostType>();
   const [submitting, setIsSubmitting] = useState(false);
+ const [post, setPost] = useState<PostType>({
+   prompt: "",
+   tag: "",
+   image_url: "",
+   audio_url: "",
+ });
 
   
   const getPromptDetails = useCallback(async () => {

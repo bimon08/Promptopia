@@ -1,12 +1,14 @@
 import React from "react";
 import Feed from "./../components/Feed";
+import { TextGenerateEffect } from "@src/components/ui/text-generate-effect";
 
 const Home = () => {
   // You can replace this with an actual Bible verse
   const bibleVerse =
-    "So then let us pursue what makes for peace and for mutual upbuilding.  Romans 14:19";
+    "So then let us pursue what makes for peace and for mutual upbuilding.  Romans 14:19"
+  const description ="Welcome to our platform where you can build each other up by readin others posts or creating your own to inspire others."
   return (
-    <section className="flex-center w-full flex-col">
+    <section className="flex-center w-full flex-col font-inter text-white">
       <h1 className="head_text text-center">
         Build and Grow
         <br className="md" />
@@ -14,11 +16,8 @@ const Home = () => {
           As Iron Sharpens Iron
         </span>
       </h1>
-      <p className="desc text-center">
-        Welcome to our platform where you can build each other up by reading
-        {"others'"} posts or creating your own to inspire others.
-      </p>
-      <p className="desc text-center">{bibleVerse}</p>
+      <TextGenerateEffect words={description} className=" text-center " />
+      <TextGenerateEffect words={bibleVerse} className="text-center " />
       <Feed />
     </section>
   );

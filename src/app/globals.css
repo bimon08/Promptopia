@@ -66,10 +66,6 @@
   @apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
 }
 
-.desc {
-  @apply mt-5 max-w-2xl text-lg text-gray-600 sm:text-xl;
-}
-
 .search_input {
   @apply block w-full rounded-md border border-gray-200 bg-white py-2.5 pl-5 pr-12 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0;
 }

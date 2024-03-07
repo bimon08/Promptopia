@@ -1,12 +1,12 @@
 export type PostType = {
-  _id?: string;
+  _id?: string | undefined;
   id?: string;
   tag: string;
   prompt: string;
   image_url?: string;
   audio_url?: string;
   user?: {
-    id?: string;
+    id?: string | undefined;
     image?: string;
     username?: string;
     email: string;
@@ -28,5 +28,5 @@ export type UserType = {
   username: string;
   email: string;
   image: string;
-  id?:string
+  id?: string;
 };

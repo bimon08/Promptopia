@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { Button } from "./ui/button";
 
 type UserProfileProps = {
   post: {
@@ -52,19 +53,31 @@ const UserProfile = ({
         </>
       )}
     </div>
-    <div className="copy_btn" onClick={handleCopy}>
-      <Image
-        src={
-          copied === prompt
-            ? "/assets/icons/tick.svg"
-            : "/assets/icons/copy.svg"
-        }
-        alt={copied === prompt ? "tick_icon" : "copy_icon"}
-        width={12}
-        height={12}
-      />
+    <div className="relative">
+      <Button
+        variant="ghost"
+        className="z-50 flex cursor-pointer items-center"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCopy();
+        }}
+      >
+        <div className="copy_btn">
+          <Image
+            key={copied}
+            className=""
+            src={
+              copied === prompt
+                ? "/assets/icons/tick.svg"
+                : "/assets/icons/copy.svg"
+            }
+            alt={copied === prompt ? "tick_icon" : "copy_icon"}
+            width={12}
+            height={12}
+          />
+        </div>
+      </Button>
     </div>
-    <UserAudio audio={audio} />
   </div>
 );
 
