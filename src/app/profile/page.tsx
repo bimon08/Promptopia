@@ -5,38 +5,36 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Profile from "@src/components/Profile";
 import { toast } from "sonner";
-import { PostType } from "@src/components/Type";
+import { IPost } from "types/Type";
 import axios from "axios";
 
 const MyProfile: React.FC = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [posts, setPosts] = useState<PostType[]>([]);
+  const [posts, setPosts] = useState<IPost[]>([]);
 
-
- useEffect(() => {
-  const fetchPosts = async () => {
-    try {
-      const response = await fetch(`/api/users/${session?.user.id}/posts`);
-      if (!response.ok) throw new Error("Failed to fetch posts");
-      const data = await response.json();
-      setPosts(data);
-    } catch (error) {
-      console.error("Error fetching posts:", error);
-      toast.error("Failed to fetch posts");
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await fetch(`/api/users/${session?.user.id}/posts`);
+        if (!response.ok) throw new Error("Failed to fetch posts");
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        toast.error("Failed to fetch posts");
+      }
+    };
+    if (session?.user.id) {
+      if (status === "authenticated") {
+        fetchPosts();
+      }
     }
-  };
-   if (session?.user.id) {
-     if (status === "authenticated") {
-       fetchPosts();
-     }
-   }
-   
-}, [session?.user.id, status]);
+  }, [session?.user.id, status]);
 
-  const handleEdit = (post: PostType) => {
+  const handleEdit = (post: IPost) => {
     if (post.id !== undefined) {
-      router.push(`/update-prompt?id=${post.id}`);
+      router.push(`/update-message?id=${post.id}`);
     } else {
       console.error(
         "Post id is undefined, cannot navigate to the update page.",
@@ -44,27 +42,25 @@ const MyProfile: React.FC = () => {
     }
   };
 
-  const handleDelete = async (post: PostType) => {
+  const handleDelete = async (post: IPost) => {
     const hasConfirmed = window.confirm(
-      "Are you sure you want to delete this prompt?",
+      "Are you sure you want to delete this message?",
     );
     if (hasConfirmed) {
-      // Directly check if post.id is undefined
       if (typeof post.id === "undefined") {
-        console.error("Cannot delete the prompt as the post ID is undefined.");
-        toast.error("Failed to delete prompt: Post ID is undefined.");
-        return; // Abort the deletion process
+        console.error("Cannot delete the message as the post ID is undefined.");
+        toast.error("Failed to delete message: Post ID is undefined.");
+        return;
       }
 
-      // Proceed with the deletion process since post.id is confirmed to be defined
       try {
-        await axios.delete(`/api/prompt/${post.id.toString()}`);
+        await axios.delete(`/api/message/${post.id.toString()}`);
         const filteredPosts = posts.filter((p) => p.id !== post.id);
         setPosts(filteredPosts);
-        toast.success("Prompt deleted successfully");
+        toast.success("message deleted successfully");
       } catch (error) {
-        console.error("Error deleting prompt:", error);
-        toast.error("Failed to delete prompt"); 
+        console.error("Error deleting message:", error);
+        toast.error("Failed to delete message");
       }
     }
   };

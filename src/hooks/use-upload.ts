@@ -1,6 +1,8 @@
+import { delete_image_func } from "@src/utils/delete_image_func";
 import { upload_file_func } from "@src/utils/upload_file_func";
+import axios from "axios";
 import { useSession } from "next-auth/react";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const useUpload = () => {
@@ -8,6 +10,16 @@ export const useUpload = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
+      if (audioPreviewUrl) URL.revokeObjectURL(audioPreviewUrl);
+    };
+  }),
+    [imagePreviewUrl, audioPreviewUrl];
 
   const handleUpload = useCallback(
     async (file: File, fileType: "image" | "audio") => {
@@ -30,6 +42,10 @@ export const useUpload = () => {
             fileType.charAt(0).toUpperCase() + fileType.slice(1)
           } uploaded successfully`,
         );
+        const fileUrl = URL.createObjectURL(file);
+        fileType === "image"
+          ? setImagePreviewUrl(fileUrl)
+          : setAudioPreviewUrl(fileUrl);
         fileType === "image"
           ? setImageUrl(downloadUrl)
           : setAudioUrl(downloadUrl);
@@ -43,10 +59,29 @@ export const useUpload = () => {
     [session?.user?.email],
   );
 
+const deleteUploadedFile = useCallback(
+  async (
+    fileUrl: string | null,
+    fileType: "image" | "audio",
+    email: string | null | undefined,
+  ) => {
+    if (fileUrl && email) {
+      try {
+        const fileName = fileUrl.split("/").pop();
+        if (fileName) {
+          await delete_image_func({ fileName, email });
+          fileType === "image" ? setImageUrl(null) : setAudioUrl(null);
+        }
+      } catch (error) {
+        console.error("Error deleting uploaded file:", error);
+      }
+    }
+  },
+  [],
+);
+  
   const handleFileChange =
     (fileType: "image" | "audio") => (e: ChangeEvent<HTMLInputElement>) => {
-      toast.success("Code is up and running");
-      console.log("File changed:", e.target.files);
       const file = e.target.files?.[0];
       if (file) handleUpload(file, fileType);
     };
@@ -57,5 +92,8 @@ export const useUpload = () => {
     handleImageChange: handleFileChange("image"),
     handleAudioChange: handleFileChange("audio"),
     isLoading,
+    imagePreviewUrl,
+    audioPreviewUrl,
+    deleteUploadedFile,
   };
 };

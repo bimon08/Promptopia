@@ -3,7 +3,6 @@ import Feed from "./../components/Feed";
 import { TextGenerateEffect } from "@src/components/ui/text-generate-effect";
 
 const Home = () => {
-  // You can replace this with an actual Bible verse
   const bibleVerse =
     "So then let us pursue what makes for peace and for mutual upbuilding.  Romans 14:19"
   const description ="Welcome to our platform where you can build each other up by readin others posts or creating your own to inspire others."
@@ -16,7 +15,7 @@ const Home = () => {
           As Iron Sharpens Iron
         </span>
       </h1>
-      <TextGenerateEffect words={description} className=" text-center " />
+      <TextGenerateEffect words={description} className="text-center  py-6" />
       <TextGenerateEffect words={bibleVerse} className="text-center " />
       <Feed />
     </section>

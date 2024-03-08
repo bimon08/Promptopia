@@ -18,7 +18,7 @@
 
 //   try {
 //     await mongoose.connect(process.env.MONGODB_URI, {
-//       dbName: "TestDBPrompt",
+//       dbName: "TestDBmessage",
 //     });
 
 //     isConnected = true;

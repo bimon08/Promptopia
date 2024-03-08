@@ -36,7 +36,7 @@ const handler = NextAuth({
           return { user: { name: "", email: "", image: "" }, expires: "" };
         }
 
-        const dbUser = await prisma.users.findUnique({
+        const dbUser = await prisma.user.findUnique({
           where: {
             email: session?.user?.email as string,
           },
@@ -72,13 +72,13 @@ const handler = NextAuth({
           .then(() => console.log("Connected to database"))
           .catch(() => console.log("Error connecting to database"));
 
-        const userExists = await prisma.users.findUnique({
+        const userExists = await prisma.user.findUnique({
           where: {
             email: profile.email,
           },
         });
         if (!userExists) {
-          await prisma.users
+          await prisma.user
             .create({
               data: {
                 email: profile.email as string,

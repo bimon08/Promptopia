@@ -1,18 +1,17 @@
 import { ParamType } from "@src/app/api/_lib/type";
-
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "prisma/client-prisma";
 
 export const GET = async (request: NextRequest, { params }: ParamType) => {
   try {
-    const prompts = await prisma.prompts.findMany({
+    const posts = await prisma.post.findMany({
       where: {
         creator: params.id,
       },
       select: {
         id: true,
-        prompt: true,
-        image_url: true,
+        message: true,
+        imageUrl: true,
         tag: true,
         user: {
           select: {
@@ -25,9 +24,9 @@ export const GET = async (request: NextRequest, { params }: ParamType) => {
       },
     });
 
-    return new Response(JSON.stringify(prompts), { status: 200 });
+    return new Response(JSON.stringify(posts), { status: 200 });
   } catch (error) {
-    return new Response("Failed to fetch prompts created by user", {
+    return new Response("Failed to fetch posts created by user", {
       status: 500,
     });
   }

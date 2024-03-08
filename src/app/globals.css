@@ -34,6 +34,36 @@
 
     --radius: 0.5rem;
   }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
+
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+
+    --primary: 60 9.1% 97.8%;
+    --primary-foreground: 24 9.8% 10%;
+
+    --secondary: 24 9.8% 10%;
+    --secondary-foreground: 60 4.8% 95.9%;
+
+    --muted: 25 5.3% 44.7%;
+    --muted-foreground: 60 4.8% 95.9%;
+
+    --accent: 24 9.8% 10%;
+    --accent-foreground: 60 4.8% 95.9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --border: 20 14.3% 4.1%;
+    --input: 20 14.3% 4.1%;
+    --ring: 60 9.1% 97.8%;
+  }
 }
 
 /* Tailwind Styles */
@@ -51,81 +81,80 @@
 }
 
 .head_text {
-  @apply mt-5 text-5xl font-extrabold leading-[1.15] text-black sm:text-6xl;
+  @apply mt-5 text-5xl font-extrabold leading-[1.15] text-foreground sm:text-6xl;
 }
 
 .orange_gradient {
   @apply bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent;
 }
 
-.green_gradient {
-  @apply bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent;
+.green_gradient {@apply bg-gradient-to-r from-green-400 to-green-500 bg-clip-text text-transparent;
 }
 
 .blue_gradient {
-  @apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
+@apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
 }
 
 .search_input {
-  @apply block w-full rounded-md border border-gray-200 bg-white py-2.5 pl-5 pr-12 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0;
+@apply block w-full rounded-md border border-input bg-background py-2.5 pl-5 pr-12 font-satoshi text-sm font-medium shadow-lg focus:border-ring focus:outline-none focus:ring-0;
 }
 
 .copy_btn {
-  @apply flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur;
+@apply flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-background/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur;
 }
 
 .glassmorphism {
-  @apply rounded-xl border border-gray-200 bg-white/20 p-5 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur;
+@apply rounded-xl border border-border bg-background/20 p-5 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur;
 }
 
-.prompt_layout {
-  @apply space-y-6 py-8 sm:columns-2 sm:gap-6 xl:columns-3;
+.message_layout {
+@apply space-y-6 py-8 sm:columns-2 sm:gap-6 xl:columns-3;
 }
 
 /* Feed Component */
 .feed {
-  @apply mx-auto mt-16 flex w-full max-w-xl flex-col items-center justify-center gap-2;
+@apply mx-auto mt-16 flex w-full max-w-xl flex-col items-center justify-center gap-2;
 }
 
 /* Form Component */
 .form_textarea {
-  @apply mt-2 flex h-[200px] w-full rounded-lg p-3 text-sm text-gray-500 outline-0;
+@apply mt-2 flex h-[200px] w-full rounded-lg p-3 text-sm text-muted-foreground outline-0;
 }
 
 .form_input {
-  @apply mt-2 flex w-full rounded-lg p-3 text-sm text-gray-500 outline-0;
+@apply mt-2 flex w-full rounded-lg p-3 text-sm text-muted-foreground outline-0;
 }
 
 /* Nav Component */
 .logo_text {
-  @apply font-satoshi text-lg font-semibold tracking-wide text-black max-sm:hidden;
+@apply font-satoshi text-lg font-semibold tracking-wide text-foreground max-sm:hidden;
 }
 
 .dropdown {
-  @apply absolute right-0 top-full mt-3 flex w-full min-w-[210px] flex-col items-end justify-end gap-2 rounded-lg bg-white p-5;
+@apply absolute right-0 top-full mt-3 flex w-full min-w-[210px] flex-col items-end justify-end gap-2 rounded-lg bg-popover p-5;
 }
 
 .dropdown_link {
-  @apply font-inter text-sm font-medium text-gray-700 hover:text-gray-500;
+@apply font-inter text-sm font-medium text-popover-foreground hover:text-accent-foreground;
 }
 
-/* PromptCard Component */
-.prompt_card {
-  @apply h-fit w-full flex-1 break-inside-avoid rounded-lg border border-gray-300 bg-white/20 bg-clip-padding p-6 pb-4 backdrop-blur-lg backdrop-filter md:w-[360px];
+/* messageCard Component */
+.message_card {
+@apply h-fit w-full flex-1 break-inside-avoid rounded-lg border border-border bg-card/20 bg-clip-padding p-6 pb-4 backdrop-blur-lg backdrop-filter md:w-[360px];
 }
 
 .flex-center {
-  @apply flex items-center justify-center;
+@apply flex items-center justify-center;
 }
 
 .flex-start {
-  @apply flex items-start justify-start;
+@apply flex items-start justify-start;
 }
 
 .flex-end {
-  @apply flex items-center justify-end;
+@apply flex items-center justify-end;
 }
 
 .flex-between {
-  @apply flex items-center justify-between;
+@apply flex items-center justify-between;
 }

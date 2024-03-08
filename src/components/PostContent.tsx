@@ -5,17 +5,17 @@ import { CardItem } from "./ui/3d-card";
 
 type PostContentProps = {
   post: {
-    image_url?: string;
-    prompt?: string;
+    imageUrl?: string;
+    message?: string;
     tag: string;
-    audio_url?: string;
+    audioUrl?: string;
   };
   handleTagClick: (postTag: string) => void;
 };
 
 const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const MAX_PROMPT_LENGTH = 100;
+  const MAX_message_LENGTH = 100;
 
   useEffect(() => {
     const handleAudioPlay = () => {
@@ -36,8 +36,8 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
 
   const handleAudioClick = () => {
     if (audioRef.current) {
-      if (audioRef.current.paused || audioRef.current.src !== post.audio_url) {
-        audioRef.current.src = post.audio_url || "";
+      if (audioRef.current.paused || audioRef.current.src !== post.audioUrl) {
+        audioRef.current.src = post.audioUrl || "";
         audioRef.current.play();
       } else {
         audioRef.current.pause();
@@ -47,10 +47,10 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
 
   return (
     <>
-      {post.image_url && (
+      {post.imageUrl && (
         <CardItem className="mt-4" translateZ="40" translateY={10}>
           <Image
-            src={post.image_url}
+            src={post.imageUrl}
             alt="Description of the image"
             width={300}
             height={300}
@@ -59,9 +59,9 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
         </CardItem>
       )}
 
-      {post.prompt && (
+      {post.message && (
         <CardItem className="mt-4 max-w-[250px]" translateZ="20">
-          {post.prompt.split("\n").map((line, index) => (
+          {post.message.split("\n").map((line, index) => (
             <p
               key={index}
               className={cn(
@@ -77,30 +77,31 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
         </CardItem>
       )}
 
-      {post.audio_url && (
+      {post.audioUrl && (
         <CardItem translateZ="100" className="w-full">
           <div className="mt-4">
             <audio controls ref={audioRef} className="w-full">
-              <source src={post.audio_url} type="audio/mpeg" />
+              <source src={post.audioUrl} type="audio/mpeg" />
               Your browser does not support the audio element.
             </audio>
             <button onClick={handleAudioClick}>
               {audioRef.current?.paused ||
-              audioRef.current?.src !== post.audio_url
-                ? "Play"
-                : "Pause"}
+                audioRef.current?.src !== post.audioUrl}
             </button>
           </div>
         </CardItem>
       )}
 
       <CardItem translateZ="20">
-        <p
-          className="blue_gradient cursor-pointer font-inter text-sm"
-          onClick={() => post.tag && handleTagClick && handleTagClick(post.tag)}
-        >
-          #{post.tag}
-        </p>
+        {post.tag.split(",").map((tag, index) => (
+          <span
+            key={index}
+            className="blue_gradient mr-2 cursor-pointer font-inter text-sm"
+            onClick={() => handleTagClick(tag)}
+          >
+            #{tag.trim()}
+          </span>
+        ))}
       </CardItem>
     </>
   );

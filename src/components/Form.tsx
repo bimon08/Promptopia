@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PostType } from "./Type";
+import { IPost } from "../../types/Type";
 import { useUpload } from "@src/hooks/use-upload";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "./ui/button";
@@ -7,8 +7,8 @@ import { Textarea } from "./ui/textarea";
 
 interface FormProps {
   type: string;
-  post: PostType;
-  setPost: React.Dispatch<React.SetStateAction<PostType>>;
+  post: IPost;
+  setPost: React.Dispatch<React.SetStateAction<IPost>>;
   submitting: boolean;
   handleSubmit: any;
 }
@@ -32,8 +32,8 @@ const Form: React.FC<FormProps> = ({
   useEffect(() => {
     setPost((prev) => ({
       ...prev,
-      audio_url: audioUrl ?? prev.audio_url,
-      image_url: imageUrl ?? prev.image_url,
+      audioUrl: audioUrl ?? prev.audioUrl,
+      imageUrl: imageUrl ?? prev.imageUrl,
     }));
   }, [audioUrl, imageUrl, setPost]);
 
@@ -50,15 +50,15 @@ const Form: React.FC<FormProps> = ({
 
   const handleTagRemove = (tag: string) => {
     setTags(tags.filter((t) => t !== tag));
-  }
+  };
 
   return (
-    <section className="flex-start w-full max-w-full flex-col ">
+    <section className="flex w-full max-w-full flex-col items-start">
       <h1 className="head_text text-left">
         <span className="blue_gradient">{type} Post</span>
       </h1>
       <p className="desc max-w-md text-left">
-        {type} and share amazing prompts with the world, and let your
+        {type} and share amazing messages with the world, and let your
         imagination run wild with any AI-powered platform
       </p>
 
@@ -68,12 +68,12 @@ const Form: React.FC<FormProps> = ({
       >
         <label>
           <span className="font-satoshi text-base font-semibold text-gray-700">
-            Your AI Prompt
+            Your AI message
           </span>
           <Textarea
-            value={post.prompt}
+            value={post.message}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setPost({ ...post, prompt: e.target.value })
+              setPost({ ...post, message: e.target.value })
             }
             placeholder="Write your post here"
             required
@@ -83,21 +83,21 @@ const Form: React.FC<FormProps> = ({
 
         <label>
           <span className="font-satoshi text-base font-semibold text-gray-700">
-            Field of Prompt{" "}
+            Field of message{" "}
             <span className="font-normal">
               (#product, #webdevelopment, #idea, etc.)
             </span>
           </span>
-          <div className="flex items-center  gap-2">
+          <div className="flex items-center gap-2">
             {tags.map((tag) => (
               <div
                 key={tag}
-                className="flex items-center  h-4 rounded-md text-sm font-medium text-gray-700"
+                className="flex h-4 items-center rounded-md text-sm font-medium text-gray-700"
               >
                 {tag}
                 <button
                   type="button"
-                  className="ml-2 text-black  rounded-full hover:text-gray-700"
+                  className="ml-2 rounded-full text-black hover:text-gray-700"
                   onClick={() => handleTagRemove(tag)}
                 >
                   &times;

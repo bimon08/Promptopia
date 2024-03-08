@@ -13,22 +13,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model prompts {
-  id      String  @id @default(auto()) @map("_id") @db.ObjectId
-  creator String @db.ObjectId
-  image_url String? 
-   audio_url String?
-  prompt  String
-  tag     String
-  v       Int? @default(0) @map("__v")
-  user    users    @relation(fields: [creator], references: [id])
+model Post {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  creator   String   @db.ObjectId
+  imageUrl  String?
+  audioUrl  String?
+  message   String
+  tag       String
+  user      User     @relation(fields: [creator], references: [id])
 }
 
-model users {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  email    String @unique 
-  username String
-  image    String
-  v        Int? @default(0) @map("__v")
-  prompts  prompts[]
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  username  String
+  image     String   @default("")
+  createdAt DateTime?
+  updatedAt DateTime?
+  posts     Post[]
 }

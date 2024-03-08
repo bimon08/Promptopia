@@ -1,25 +1,18 @@
 import React from "react";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { IPost } from "types/Type"; 
 
 type UserProfileProps = {
-  post: {
-    user?: {
-      image?: string;
-      username?: string;
-      email?: string;
-    };
-    prompt?: string;
-    audio?: string;
-  };
+  post: IPost;
   onClick: () => void;
   copied: string;
   handleCopy: () => void;
 };
 
-const UserImage = ({ image }: { image?: string }) => (
+const UserImage = ({ image }: { image?: string | null }) => (
   <Image
-    src={image ?? ""}
+    src={image ?? "/assets/images/default-user-image.png"} 
     alt="user_image"
     width={40}
     height={40}
@@ -31,7 +24,7 @@ const UserAudio = ({ audio }: { audio?: string }) =>
   audio && <audio src={audio} controls />;
 
 const UserProfile = ({
-  post: { user, prompt, audio },
+  post,
   onClick,
   copied,
   handleCopy,
@@ -41,14 +34,16 @@ const UserProfile = ({
       className="flex flex-1 cursor-pointer items-center justify-start gap-3"
       onClick={onClick}
     >
-      {user && (
+      {post.user && (
         <>
-          <UserImage image={user.image} />
+          <UserImage image={post.user.image} />
           <div className="flex flex-col">
             <h3 className="font-satoshi font-semibold text-gray-900">
-              {user.username}
+              {post.user.username}
             </h3>
-            <p className="font-inter text-sm text-gray-500">{user.email}</p>
+            <p className="font-inter text-sm text-gray-500">
+              {post.user.email}
+            </p>
           </div>
         </>
       )}
@@ -56,7 +51,7 @@ const UserProfile = ({
     <div className="relative">
       <Button
         variant="ghost"
-        className="z-50 flex cursor-pointer items-center"
+        className="z-50 flex cursor-pointer items-center  gap-3"
         onClick={(e) => {
           e.stopPropagation();
           handleCopy();
@@ -67,11 +62,11 @@ const UserProfile = ({
             key={copied}
             className=""
             src={
-              copied === prompt
+              copied === post.message
                 ? "/assets/icons/tick.svg"
                 : "/assets/icons/copy.svg"
             }
-            alt={copied === prompt ? "tick_icon" : "copy_icon"}
+            alt={copied === post.message ? "tick_icon" : "copy_icon"}
             width={12}
             height={12}
           />

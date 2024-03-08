@@ -1,15 +1,17 @@
+/** @format */
+
 "use client";
 
 import { SessionProvider, useSession } from "next-auth/react";
 import Nav from "./Nav";
 import { ReactNode, useEffect } from "react";
-import { SessionType } from "./Type";
+import { ISession } from "../../types/Type";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 
 interface ProviderPropsType {
   children: ReactNode;
-  session?: SessionType;
+  session?: ISession;
 }
 
 const Provider = ({ children, session }: ProviderPropsType) => {
@@ -29,8 +31,8 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { status } = useSession();
   useEffect(() => {
     if (
-      (status === "unauthenticated" && pathName === "/create-prompt") ||
-      pathName === "/update-prompt"
+      (status === "unauthenticated" && pathName === "/create-message") ||
+      pathName === "/update-message"
     ) {
       router.push("/");
     }
@@ -45,9 +47,10 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       </>
     );
   }
+
   if (
-    (status === "unauthenticated" && pathName === "/create-prompt") ||
-    pathName === "/update-prompt"
+    (status === "unauthenticated" && pathName === "/create-message") ||
+    pathName === "/update-message"
   ) {
     return (
       <div>

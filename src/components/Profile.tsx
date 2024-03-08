@@ -1,15 +1,16 @@
-import PromptCard from "./PromptCard";
-import { PostType } from "./Type";
-import EditDialogForm from "./EditDialogForm";
+import { IPost } from "../../types/Type";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import DialogForm from "./DialogForm";
+import { toast } from "sonner";
+import MessageCard from "./MessageCard";
 
 type ProfilePropsType = {
   name: string;
   desc: string;
-  data: PostType[];
-  handleEdit?: (post: PostType) => void;
-  handleDelete?: (post: PostType) => void;
+  data: IPost[];
+  handleEdit?: (post: IPost) => void;
+  handleDelete?: (post: IPost) => void;
 };
 
 const Profile: React.FC<ProfilePropsType> = ({
@@ -20,35 +21,26 @@ const Profile: React.FC<ProfilePropsType> = ({
   handleDelete,
 }) => {
   const router = useRouter();
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
-  const [selectedPost, setSelectedPost] = useState<PostType | null>(null);
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
   const [isSelectedPostID, setIsSelectedPostID] = useState<string>("");
-  const openEditDialog = (id: string) => {
-    const post = data.find((post) => post.id === id);
-    if (post) {
-      setSelectedPost(post);
-      setIsSelectedPostID(id);
-      setIsEditDialogOpen(true);
-    }
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const closeDialog = () => {
+    setIsDialogOpen(!isDialogOpen);
   };
 
-  const closeEditDialog = () => {
-    setIsSelectedPostID("");
-    setIsEditDialogOpen(false);
-  };
-
-  const handleEditSubmit = (postData: Partial<PostType>) => {
+  const handleEditSubmit = (postData: Partial<IPost>) => {
     if (handleEdit && selectedPost) {
       handleEdit({ ...selectedPost, ...postData });
-      setIsEditDialogOpen(false);
+      setIsDialogOpen(false);
     }
   };
 
-
-
- const handleEditClick = (post: PostType) => {
-   router.push(`/update-prompt?id=${post.id}`);
- };
+  const handleEditClick = (post: IPost) => {
+    setSelectedPost(post);
+    setIsDialogOpen(true);
+    setIsSelectedPostID(post.id?.toString() || "");
+  };
 
   return (
     <section className="w-full">
@@ -57,21 +49,35 @@ const Profile: React.FC<ProfilePropsType> = ({
       </h1>
       <p className="desc text-left">{desc}</p>
 
-      <div className="prompt_layout mt-10">
-        {data.map((post: PostType) => (
-          <PromptCard
+      <div
+        className=" mt-10"
+        style={{
+          columnCount: 2,
+          columnGap: "32px",
+        }}
+      >
+        {data.map((post) => (
+          <div
             key={post.id}
-            post={post}
-                handleEdit={() => handleEditClick(post)}
-            handleDelete={() => handleDelete && handleDelete(post)}
-            handleTagClick={() => null}
-          />
+            className="break-inside-avoid "
+            style={{ breakInside: "avoid", marginBottom: "32px" }}
+          >
+            <MessageCard
+              key={post.id}
+              post={post}
+              handleEdit={() => {
+                handleEditClick(post);
+              }}
+              handleDelete={() => handleDelete && handleDelete(post)}
+              handleTagClick={() => null}
+            />
+          </div>
         ))}
       </div>
 
-      <EditDialogForm
-        open={isEditDialogOpen}
-        onClose={closeEditDialog}
+      <DialogForm
+        open={isDialogOpen}
+        onClose={closeDialog}
         onSubmit={handleEditSubmit}
         post={selectedPost}
         id={isSelectedPostID}

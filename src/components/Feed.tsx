@@ -3,57 +3,66 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { toast } from "sonner";
 import axios from "axios";
-import { PostType } from "./Type";
-import PromptCard from "./PromptCard";
+import { IPost } from "../../types/Type";
+import MessageCard from "./MessageCard";
 
 const Feed: React.FC = () => {
-  const [allPosts, setAllPosts] = useState<PostType[]>([]);
+  const [allPosts, setAllPosts] = useState<IPost[]>([]);
   const [searchText, setSearchText] = useState<string>("");
-  const [searchedResults, setSearchedResults] = useState<PostType[]>([]);
+  const [searchedResults, setSearchedResults] = useState<IPost[]>([]);
+  const [cachedPosts, setCachedPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("/api/prompt");
-        if (response.status === 200) {
-          setAllPosts(response.data);
+        if (cachedPosts.length > 0) {
+          setAllPosts(cachedPosts);
         } else {
-          toast.error("Failed to fetch prompts");
+          const response = await axios.get("/api/message");
+          if (response.status === 200) {
+            setAllPosts(response.data);
+            //  response.data.forEach((post: IPost) => {
+            //  });
+            setCachedPosts(response.data);
+          } else {
+            toast.error("Failed to fetch messages");
+          }
         }
       } catch (error) {
-        toast.error(`An error occurred while fetching prompts: ${error}`);
+        console.log("Error fetching posts:", error);
+        toast.error(`An error occurred while fetching messages: ${error}`);
       }
     };
 
     fetchPosts();
-  }, []);
+  }, [cachedPosts]);
 
-  const filterPrompts = (searchText: string) => {
+  const filterMessages = (searchText: string) => {
     const regex = new RegExp(searchText, "i");
     return allPosts.filter(
       (item) =>
         regex.test(item.user?.username || "") ||
         regex.test(item.tag || "") ||
-        regex.test(item.prompt || ""),
+        regex.test(item.message || ""),
     );
   };
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
     setSearchText(searchTerm);
-    const searchResult = filterPrompts(searchTerm);
+    const searchResult = filterMessages(searchTerm);
     setSearchedResults(searchResult);
   };
 
   const handleTagClick = (tag: string) => {
     setSearchText(tag);
-    const searchResult = filterPrompts(tag);
+    const searchResult = filterMessages(tag);
     setSearchedResults(searchResult);
   };
 
   return (
-    <section className=" container ">
-      <div className="items-center py-10 ">
+    <section className=" container mb-32 ">
+      <div className="items-center justify-center py-10">
         <input
           type="text"
           placeholder="Search for a tag or a username"
@@ -73,11 +82,11 @@ const Feed: React.FC = () => {
       >
         {(searchText ? searchedResults : allPosts).map((post) => (
           <div
-            key={post._id}
+            key={post.id}
             className="break-inside-avoid "
             style={{ breakInside: "avoid", marginBottom: "32px" }}
           >
-            <PromptCard post={post} handleTagClick={handleTagClick} />
+            <MessageCard post={post} handleTagClick={handleTagClick} />
           </div>
         ))}
       </div>

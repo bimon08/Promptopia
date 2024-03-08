@@ -3,53 +3,54 @@
 
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { PostType } from "@src/components/Type";
+import { IPost } from "types/Type";
 import Form from "@src/components/Form";
 import { toast } from "sonner";
 import axios from "axios";
 import { Dialog } from "@src/components/ui/dialog";
 
-const UpdatePrompt = () => {
+const Updatemessage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const promptId = searchParams.get("id");
+  const messageId = searchParams.get("id");
   const [submitting, setIsSubmitting] = useState(false);
- const [post, setPost] = useState<PostType>({
-   prompt: "",
-   tag: "",
-   image_url: "",
-   audio_url: "",
- });
+  const [post, setPost] = useState<IPost>({
+    id: "",
+    message: "",
+    tag: "",
+    imageUrl: "",
+    audioUrl: "",
+  });
 
-  
-  const getPromptDetails = useCallback(async () => {
+  const getmessageDetails = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/prompt/${promptId}`);
+      const response = await axios.get(`/api/message/${messageId}`);
       if (response.status !== 200) {
-        toast.error("Failed to fetch prompt details");
+        toast.error("Failed to fetch message details");
         return;
       }
       const data = await response.data;
       setPost({
-        prompt: data.prompt,
+        id: data._id,
+        message: data.message,
         tag: data.tag,
-        image_url: data.image,
+        imageUrl: data.image,
       });
     } catch (error: any) {
       toast.error(error.message);
     }
-  }, [promptId]);
+  }, [messageId]);
 
   useEffect(() => {
-    if (promptId) getPromptDetails();
-  }, [promptId, getPromptDetails]);
+    if (messageId) getmessageDetails();
+  }, [messageId, getmessageDetails]);
 
-  const updatePrompt = async (e: ChangeEvent<HTMLInputElement>) => {
+  const updatemessage = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!promptId) {
-      alert("Missing PromptId!");
+    if (!messageId) {
+      alert("Missing messageId!");
       setIsSubmitting(false);
       return;
     }
@@ -60,18 +61,18 @@ const UpdatePrompt = () => {
         return;
       }
 
-      const response = await axios.patch(`/api/prompt/${promptId}`, {
-        prompt: post.prompt,
+      const response = await axios.patch(`/api/message/${messageId}`, {
+        message: post.message,
         tag: post.tag,
-        image_url: post.image_url,
+        imageUrl: post.imageUrl,
       });
 
       if (response.status === 200) {
         router.push("/");
-        toast.success("Prompt updated successfully");
+        toast.success("message updated successfully");
         return;
       } else {
-        toast.error("Failed to update prompt");
+        toast.error("Failed to update message");
         return;
       }
     } catch (error: any) {
@@ -83,19 +84,17 @@ const UpdatePrompt = () => {
 
   return (
     <>
-      
-
       {post && (
         <Form
           type="Save"
-          post={post as PostType}
+          post={post as IPost}
           setPost={setPost}
           submitting={submitting}
-          handleSubmit={updatePrompt}
+          handleSubmit={updatemessage}
         />
       )}
     </>
   );
 };
 
-export default UpdatePrompt;
+export default Updatemessage;

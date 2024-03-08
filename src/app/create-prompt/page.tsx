@@ -5,36 +5,38 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Form from "@src/components/Form";
 import { toast } from "sonner";
-import { PostType } from "@src/components/Type";
+import { IPost } from "types/Type";
 
-const CreatePrompt = () => {
+const CreateMessage = () => {
   const router = useRouter();
   const { data: session } = useSession();
   const [submitting, setIsSubmitting] = useState<boolean>(false);
-  const [post, setPost] = useState<PostType>({
-    prompt: "",
+  const [post, setPost] = useState<IPost>({
+    id: "",
+    message: "",
     tag: "",
-    image_url: "",
-    audio_url: "",
+    imageUrl: "",
+    audioUrl: "",
   });
 
-  const createPrompt = async (e: FormEvent<HTMLFormElement>) => {
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
       if (session?.user) {
-        const response = await fetch("/api/prompt/new", {
+        const response = await fetch("/api/message/new", {
           method: "POST",
           body: JSON.stringify({
-            prompt: post.prompt,
+            message: post.message,
             userId: session.user.id,
             tag: post.tag,
-            image_url: post.image_url,
-            audio_url: post.audio_url,
+            imageUrl: post.imageUrl,
+            audioUrl: post.audioUrl,
           }),
         });
         if (response.ok) {
-          toast.success("Prompt created successfully!");
+          toast.success("Message created successfully!");
           router.push("/");
           return;
         }
@@ -52,9 +54,9 @@ const CreatePrompt = () => {
       post={post}
       setPost={setPost}
       submitting={submitting}
-      handleSubmit={createPrompt}
+      handleSubmit={handleSubmit}
     />
   );
 };
 
-export default CreatePrompt;
+export default CreateMessage;
