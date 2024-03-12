@@ -40,10 +40,7 @@ const Nav = () => {
     Object.values(providers).map((provider: any) => (
       <button
         key={provider.name}
-        onClick={() => {
-           console.log("Provider ID:", provider.id);
-          signIn(provider.id)}
-        } 
+        onClick={() => signIn(provider.id)}
         className="black_btn"
       >
         Sign in
@@ -52,28 +49,10 @@ const Nav = () => {
 
   const renderUserMenu = () => (
     <div className="flex gap-3 md:gap-5">
-      <Button
-        className={cn(
-          "black_btn",
-          "px-4 py-2 text-sm font-semibold",
-          theme === "light"
-            ? "bg-gray-800 text-white hover:bg-gray-700"
-            : "bg-gray-200 text-gray-800 hover:bg-gray-300",
-        )}
-        onClick={closeDialog}
-      >
+      <Button className="black_btn" onClick={closeDialog}>
         Create Post
       </Button>
-      <button
-        type="button"
-        onClick={handleSignOut}
-        className={cn(
-          "flex items-center justify-center rounded-full border px-5 py-1.5 text-center font-inter text-sm transition-all",
-          theme === "light"
-            ? "border-gray-300 bg-transparent text-gray-800 hover:bg-gray-200"
-            : "border-gray-600 bg-transparent text-white hover:bg-gray-700",
-        )}
-      >
+      <button type="button" onClick={handleSignOut} className="outline_btn">
         Sign Out
       </button>
       <Link href="/profile">
@@ -142,7 +121,7 @@ const Nav = () => {
     <nav className="flex w-full items-center justify-between p-6">
       <Link href="/" className="flex items-center gap-2">
         <Image
-          src="/assets/images/logo.svg"
+          src="/assets/images/pringles.png"
           alt="logo"
           width={30}
           height={30}

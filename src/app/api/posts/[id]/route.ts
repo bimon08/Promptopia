@@ -88,7 +88,6 @@ export const PATCH = async (request: NextRequest, { params }: ParamType) => {
 
 export const DELETE = async (request: NextRequest, { params }: ParamType) => {
   try {
-    console.log(params.id);
     const post = await prisma.post.findUnique({
       where: {
         id: params.id,

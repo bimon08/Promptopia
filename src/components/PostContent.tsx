@@ -110,7 +110,7 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
       {post.audioUrl && (
         <CardItem translateZ="100" className="w-full">
           <div className="mt-4">
-            <audio controls ref={audioRef} className="w-full">
+            <audio controls ref={audioRef} className="w-full" autoPlay={false}>
               <source src={post.audioUrl} type="audio/mpeg" />
               Your browser does not support the audio element.
             </audio>

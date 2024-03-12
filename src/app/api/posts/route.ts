@@ -10,7 +10,6 @@ export const GET = async (request: NextRequest) => {
         user: true,
       },
     });
-    console.log("GET - Messages:", messages);
     return new Response(JSON.stringify(messages), { status: 200 });
   } catch (error) {
     console.log("GET - Error:", error);

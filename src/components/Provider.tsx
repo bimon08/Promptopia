@@ -7,6 +7,7 @@ import { ReactNode, useEffect } from "react";
 import { ISession } from "../../types/Type";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import NavbarContentDemo from "./NavBar";
 
 interface ProviderPropsType {
   children: ReactNode;
@@ -16,7 +17,8 @@ interface ProviderPropsType {
 const Provider = ({ children, session }: ProviderPropsType) => {
   return (
     <SessionProvider session={session}>
-      <Nav />
+      {/* <Nav /> */}
+      <NavbarContentDemo />
       {children}
     </SessionProvider>
   );
