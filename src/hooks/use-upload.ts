@@ -1,99 +1,182 @@
-import { delete_image_func } from "@src/utils/delete_image_func";
-import { upload_file_func } from "@src/utils/upload_file_func";
+// d:/Projects/Promptopia/src/hooks/use-upload.ts
+
+import { PostSchema } from "@src/models/post";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { IPost } from "types/Type";
+import { z } from "zod";
+import { useFileUpload } from "./use-file-upload";
+import { useTags } from "./use-tags";
 
-export const useUpload = () => {
+type useUploadProps = {
+  post?: IPost | null;
+  id?: string;
+  onSubmit: (postData: Partial<IPost>) => void;
+  onClose?: () => void;
+};
+
+export const useUpload = ({ post, id, onSubmit, onClose }: useUploadProps) => {
   const { data: session } = useSession();
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-  const [audioPreviewUrl, setAudioPreviewUrl] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [formData, setFormData] = useState({
+    message: post?.message || "",
+    tag: post?.tag ? (Array.isArray(post.tag) ? post.tag : [post.tag]) : [],
+    image: post?.imageUrl || "",
+    audio: post?.audioUrl || "",
+  });
+
+  const {
+    imageUrl,
+    audioUrl,
+    isLoading,
+    isAudioUploading,
+    isImageUploading,
+    selectedImage,
+    selectedAudio,
+    handleFileChange,
+    setSelectedAudio,
+    setSelectedImage,
+    handleFileRemove,
+    audioObjectUrl,
+  } = useFileUpload({ session });
+
+  const {
+    tags,
+    addTag,
+    removeTag,
+    handleTagInputChange,
+    handleTagInputBlur,
+    handleAddTag,
+  } = useTags({ formData, setFormData });
 
   useEffect(() => {
-    return () => {
-      if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
-      if (audioPreviewUrl) URL.revokeObjectURL(audioPreviewUrl);
-    };
-  }),
-    [imagePreviewUrl, audioPreviewUrl];
+    if (post) {
+      setFormData({
+        message: post?.message || "",
+        tag: post?.tag ? (Array.isArray(post.tag) ? post.tag : [post.tag]) : [],
+        image: post?.imageUrl || "",
+        audio: post?.audioUrl || "",
+      });
+    }
+  }, [post]);
 
-  const handleUpload = useCallback(
-    async (file: File, fileType: "image" | "audio") => {
-      if (!session?.user?.email) {
-        toast.error("User email is not available.");
-        return;
-      }
-      let toastId;
-      try {
-        setIsLoading(true);
-        const toastId = toast.loading("Uploading...");
-        console.log(file);
-        const downloadUrl = await upload_file_func({
-          file,
-          userEmail: session.user.email,
-          fileType,
-        });
-        toast.success(
-          `${
-            fileType.charAt(0).toUpperCase() + fileType.slice(1)
-          } uploaded successfully`,
-        );
-        const fileUrl = URL.createObjectURL(file);
-        fileType === "image"
-          ? setImagePreviewUrl(fileUrl)
-          : setAudioPreviewUrl(fileUrl);
-        fileType === "image"
-          ? setImageUrl(downloadUrl)
-          : setAudioUrl(downloadUrl);
-      } catch (error: any) {
-        toast.error(error.message);
-      } finally {
-        setIsLoading(false);
-        toast.dismiss(toastId);
-      }
+  const updateFormData = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = event.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
     },
-    [session?.user?.email],
+    [],
   );
 
-const deleteUploadedFile = useCallback(
-  async (
-    fileUrl: string | null,
-    fileType: "image" | "audio",
-    email: string | null | undefined,
-  ) => {
-    if (fileUrl && email) {
+  const resetForm = useCallback(() => {
+    setSelectedAudio(null);
+    setSelectedImage(null);
+    setFormData({
+      message: "",
+      tag: [],
+      image: "",
+      audio: "",
+    });
+  }, [setSelectedAudio, setSelectedImage]);
+
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      setIsSubmitting(true);
+
       try {
-        const fileName = fileUrl.split("/").pop();
-        if (fileName) {
-          await delete_image_func({ fileName, email });
-          fileType === "image" ? setImageUrl(null) : setAudioUrl(null);
+        if (selectedImage) {
+          await handleFileChange("image")({
+            target: { files: [selectedImage] },
+          } as unknown as ChangeEvent<HTMLInputElement>);
         }
-      } catch (error) {
-        console.error("Error deleting uploaded file:", error);
+
+        if (selectedAudio) {
+          await handleFileChange("audio")({
+            target: { files: [selectedAudio] },
+          } as unknown as ChangeEvent<HTMLInputElement>);
+        }
+
+        const validatedData = PostSchema.parse({
+          message: formData.message,
+          tag: formData.tag,
+          imageUrl: imageUrl || "",
+          audioUrl: audioUrl || "",
+          creator: session?.user?.id || "",
+        });
+
+        const payload = {
+          ...validatedData,
+        };
+
+        const response = id
+          ? await axios.patch(`/api/posts/${id}`, payload)
+          : await axios.post("/api/posts", payload);
+
+        if (response.status === 200 || response.status === 201) {
+          toast.success("Post submitted successfully");
+          onSubmit(response.data);
+          resetForm();
+          if (onClose) {
+            onClose();
+          }
+        } else {
+          toast.error("Failed to submit post");
+        }
+      } catch (error: any) {
+        console.error("Error submitting post", error);
+        if (error instanceof z.ZodError) {
+          toast.error(error.issues.map((issue) => issue.message).join("\n"));
+        } else {
+          toast.error("An error occurred while submitting the post");
+        }
+      } finally {
+        setIsSubmitting(false);
       }
-    }
-  },
-  [],
-);
-  
-  const handleFileChange =
-    (fileType: "image" | "audio") => (e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) handleUpload(file, fileType);
-    };
+    },
+    [
+      formData,
+      id,
+      onSubmit,
+      selectedAudio,
+      selectedImage,
+      handleFileChange,
+      imageUrl,
+      audioUrl,
+      session?.user?.id,
+      resetForm,
+    ],
+  );
 
   return {
+    handleAddTag,
     imageUrl,
+    tags,
     audioUrl,
     handleImageChange: handleFileChange("image"),
     handleAudioChange: handleFileChange("audio"),
     isLoading,
-    imagePreviewUrl,
-    audioPreviewUrl,
-    deleteUploadedFile,
+    isAudioUploading,
+    isImageUploading,
+    selectedImage,
+    selectedAudio,
+    setSelectedAudio,
+    setSelectedImage,
+    handleFileRemove,
+    isSubmitting,
+    handleFileChange,
+    handleSubmit,
+    removeTag,
+    formData,
+    audioObjectUrl,
+    updateFormData,
+    addTag,
+    handleTagInputChange,
+    handleTagInputBlur,
   };
 };

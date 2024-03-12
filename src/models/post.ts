@@ -1,45 +1,20 @@
 import { z } from "zod";
 
 export const PostSchema = z.object({
-  message: z
-    .string({
-      required_error: "Post is required",
-    })
-    .min(3, {
-      message: "Post must be at least 3 characters long",
-    })
-    .max(500, {
-      message: "Post must be at most 500 characters long",
-    }),
-
+  id: z.string().optional(),
   tag: z
-    .string({
-      required_error: "Tag is required",
-    })
-    .min(3, {
-      message: "Tag must be at least 3 characters long",
-    })
-    .max(20, {
-      message: "Tag must be at most 20 characters long",
-    }),
-
-  imageUrl: z
-    .string({
-      required_error: "Image URL is required",
-    })
-    .url({
-      message: "Invalid image URL",
-    })
-    .optional(),
-
-  audioUrl: z
-    .string({
-      required_error: "Audio URL is required",
-    })
-    .url({
-      message: "Invalid audio URL",
-    })
-    .optional(),
+    .array(z.string())
+    .min(1, "At least one tag is required.")
+    .max(5, "Maximum of 5 tags are allowed."),
+  message: z
+    .string()
+    .min(3, "The post message must be at least 3 characters long.")
+    .max(500, "The post message must be at most 500 characters long."),
+  creator: z.string(), 
+  imageUrl: z.string().optional(),
+  audioUrl: z.string().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
-export type PostSchemaType = z.infer<typeof PostSchema>;
+export type IPost = z.infer<typeof PostSchema>;

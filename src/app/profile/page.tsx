@@ -54,7 +54,7 @@ const MyProfile: React.FC = () => {
       }
 
       try {
-        await axios.delete(`/api/message/${post.id.toString()}`);
+        await axios.delete(`/api/posts/${post.id.toString()}`);
         const filteredPosts = posts.filter((p) => p.id !== post.id);
         setPosts(filteredPosts);
         toast.success("message deleted successfully");

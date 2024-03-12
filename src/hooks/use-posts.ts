@@ -1,13 +1,15 @@
+// src\hooks\use-posts.ts
+
 import { IPost } from "types/Type";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export const usemessage = () => {
+export const usePosts = () => {
   const [data, setData] = useState<IPost[]>([]);
-  async function getmessage() {
+  async function fetchPosts() {
     try {
-      const response = await axios.get("/api/message");
+      const response = await axios.get("/api/posts");
       if (response.status === 200) {
         const data = await response.data;
         setData(data);
@@ -22,11 +24,11 @@ export const usemessage = () => {
     }
   }
   function refetch() {
-    console.log("Refetching messages...");
-    getmessage();
+    console.log("Refetching posts...");
+    fetchPosts();
   }
   useEffect(() => {
-    getmessage();
+    fetchPosts();
   }, []);
   return { data, refetch };
 };

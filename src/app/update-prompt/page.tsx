@@ -24,7 +24,7 @@ const Updatemessage = () => {
 
   const getmessageDetails = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/message/${messageId}`);
+      const response = await axios.get(`/api/posts/${messageId}`);
       if (response.status !== 200) {
         toast.error("Failed to fetch message details");
         return;
@@ -61,7 +61,7 @@ const Updatemessage = () => {
         return;
       }
 
-      const response = await axios.patch(`/api/message/${messageId}`, {
+      const response = await axios.patch(`/api/posts/${messageId}`, {
         message: post.message,
         tag: post.tag,
         imageUrl: post.imageUrl,

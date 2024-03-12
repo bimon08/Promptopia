@@ -19,13 +19,12 @@ const CreateMessage = () => {
     audioUrl: "",
   });
 
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
       if (session?.user) {
-        const response = await fetch("/api/message/new", {
+        const response = await fetch("/api/posts/new", {
           method: "POST",
           body: JSON.stringify({
             message: post.message,

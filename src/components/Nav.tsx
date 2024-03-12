@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
+import DialogForm from "./DialogForm";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import DialogForm from "./DialogForm";
 import { useTheme } from "next-themes";
 import { Sun, Moon } from "lucide-react";
 import { cn } from "@src/lib/utils";
@@ -40,7 +40,10 @@ const Nav = () => {
     Object.values(providers).map((provider: any) => (
       <button
         key={provider.name}
-        onClick={() => signIn(provider.id)}
+        onClick={() => {
+           console.log("Provider ID:", provider.id);
+          signIn(provider.id)}
+        } 
         className="black_btn"
       >
         Sign in

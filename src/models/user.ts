@@ -1,18 +1,13 @@
+// src/models/user.ts
 import { z } from "zod";
 
 export const UserSchema = z.object({
-  email: z
-    .string({
-      required_error: "Email is required",
-    })
-    .email({
-      message: "Invalid email",
-    })
-    .trim(),
-  username: z.string({
-    required_error: "Username is required",
-  }),
-  image: z.string().optional(),
+  id: z.string() ,
+  username: z.string(),
+  email: z.string().email(),
+  image: z.string().url().optional(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
-export type UserSchemaType = z.infer<typeof UserSchema>;
+export type IUser = z.infer<typeof UserSchema>;

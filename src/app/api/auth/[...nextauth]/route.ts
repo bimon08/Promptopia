@@ -1,3 +1,5 @@
+// d:/Projects/Promptopia/src/app/api/auth/[...nextauth]/route.ts
+
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "prisma/client-prisma";

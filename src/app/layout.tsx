@@ -22,12 +22,11 @@ const RootLayout = ({ children }: RootLayoutPropstype) => {
       <body className={"font-satoshi"}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
           disableTransitionOnChange
         >
           <Provider>
-            <div className="mai n">
+            <div className="main">
               <div className="gradient" />
             </div>
             <main className="app">{children}</main>

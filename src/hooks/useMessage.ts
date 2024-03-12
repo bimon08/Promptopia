@@ -3,11 +3,11 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-export const usemessage = () => {
+export const useMessage = () => {
   const [data, setData] = useState<IPost[]>([]);
   async function getmessage() {
     try {
-      const response = await axios.get("/api/message");
+      const response = await axios.get("/api/posts");
       if (response.status === 200) {
         const data = await response.data;
         setData(data);

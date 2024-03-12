@@ -1,7 +1,10 @@
+// d:/Projects/Promptopia/src/components/PostContent.tsx
+
 import React, { useRef, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@src/lib/utils";
 import { CardItem } from "./ui/3d-card";
+import { motion, useAnimation } from "framer-motion";
 
 type PostContentProps = {
   post: {
@@ -16,6 +19,8 @@ type PostContentProps = {
 const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const MAX_message_LENGTH = 100;
+  const containerRef = useRef<null | HTMLDivElement>(null);
+  const controls = useAnimation();
 
   useEffect(() => {
     const handleAudioPlay = () => {
@@ -33,6 +38,31 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
       currentAudio?.removeEventListener("play", handleAudioPlay);
     };
   }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (container)
+    {
+       const scrollWidth = container.scrollWidth;
+       const clientWidth = container.clientWidth;
+
+      if (scrollWidth > clientWidth) {
+        const initialScroll = Math.min(30, scrollWidth - clientWidth);
+        
+         controls
+           .start({
+             x: `-${initialScroll}px`,
+             transition: { duration: 0.5, ease: "easeInOut" },
+           })
+           .then(() => {
+             controls.start({
+               x: "0px",
+               transition: { duration: 0.5, ease: "easeInOut" },
+             });
+           });
+       }
+     }
+  }, [controls]);
 
   const handleAudioClick = () => {
     if (audioRef.current) {
@@ -92,17 +122,23 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
         </CardItem>
       )}
 
-      <CardItem translateZ="20">
-        {post.tag.split(",").map((tag, index) => (
-          <span
-            key={index}
-            className="blue_gradient mr-2 cursor-pointer font-inter text-sm"
-            onClick={() => handleTagClick(tag)}
-          >
-            #{tag.trim()}
-          </span>
-        ))}
-      </CardItem>
+      <motion.div
+        ref={containerRef}
+        className="max-w-[250px] overflow-hidden whitespace-nowrap p-2"
+      >
+        <motion.div className="flex" animate={controls}>
+          {Array.isArray(post.tag) &&
+            post.tag.map((tag, index) => (
+              <span
+                key={index}
+                onClick={() => handleTagClick(tag)}
+                className="mr-2 inline-block cursor-pointer rounded bg-gray-200 px-2 py-1 text-gray-900"
+              >
+                #{tag.trim()}
+              </span>
+            ))}
+        </motion.div>
+      </motion.div>
     </>
   );
 };

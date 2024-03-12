@@ -11,7 +11,9 @@ export const GET = async (request: NextRequest, { params }: ParamType) => {
         id: params.id,
       },
     });
-    if (!post) return new Response("Post Not Found", { status: 404 });
+    if (!post) {
+      return new Response("Post Not Found", { status: 404 });
+    }
     return new Response(JSON.stringify(post), {
       status: 200,
       headers: {
@@ -19,6 +21,7 @@ export const GET = async (request: NextRequest, { params }: ParamType) => {
       },
     });
   } catch (error) {
+    console.error("Error retrieving post:", error);
     return new Response("Internal Server Error", { status: 500 });
   }
 };
@@ -68,12 +71,6 @@ export const PATCH = async (request: NextRequest, { params }: ParamType) => {
 
     console.log("Updated post:", updatedPost);
 
-    if (!updatedPost) {
-      console.log("Error updating post.");
-      return new Response("Error updating post", { status: 500 });
-    }
-
-    console.log("Post updated successfully.");
     return new Response(
       JSON.stringify({ message: "Post updated successfully" }),
       {
@@ -84,7 +81,7 @@ export const PATCH = async (request: NextRequest, { params }: ParamType) => {
       },
     );
   } catch (error) {
-    console.error("Error occurred while updating post", error);
+    console.error("Error updating post:", error);
     return new Response("Error updating post", { status: 500 });
   }
 };
@@ -103,24 +100,29 @@ export const DELETE = async (request: NextRequest, { params }: ParamType) => {
     }
 
     // Delete associated files from Firebase
-    if (post.imageUrl) {
-      const imageFileName = post.imageUrl.split("/").pop();
-      if (imageFileName) {
-        await delete_image_func({
-          fileName: imageFileName,
-          email: post.creator,
-        });
+    try {
+      if (post.imageUrl) {
+        const imageFileName = post.imageUrl.split("/").pop();
+        if (imageFileName) {
+          await delete_image_func({
+            fileName: imageFileName,
+            email: post.creator,
+          });
+        }
       }
-    }
 
-    if (post.audioUrl) {
-      const audioFileName = post.audioUrl.split("/").pop();
-      if (audioFileName) {
-        await delete_image_func({
-          fileName: audioFileName,
-          email: post.creator,
-        });
+      if (post.audioUrl) {
+        const audioFileName = post.audioUrl.split("/").pop();
+        if (audioFileName) {
+          await delete_image_func({
+            fileName: audioFileName,
+            email: post.creator,
+          });
+        }
       }
+    } catch (error) {
+      console.error("Error deleting associated files:", error);
+      // You can choose to continue with the post deletion even if file deletion fails
     }
 
     // Delete the post from the database

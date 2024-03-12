@@ -21,7 +21,7 @@ model Post {
   imageUrl  String?
   audioUrl  String?
   message   String
-  tag       String
+  tag       String[]
   user      User     @relation(fields: [creator], references: [id])
 }
 

@@ -1,41 +1,17 @@
 "use client";
 
-import { useState, useEffect, ChangeEvent } from "react";
-import { toast } from "sonner";
-import axios from "axios";
+import { useState, ChangeEvent } from "react";
 import { IPost } from "../../types/Type";
 import MessageCard from "./MessageCard";
+import { usePosts } from "@src/hooks/use-posts";
 
 const Feed: React.FC = () => {
-  const [allPosts, setAllPosts] = useState<IPost[]>([]);
+  const {data: allPosts, refetch} = usePosts();
   const [searchText, setSearchText] = useState<string>("");
   const [searchedResults, setSearchedResults] = useState<IPost[]>([]);
   const [cachedPosts, setCachedPosts] = useState<IPost[]>([]);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        if (cachedPosts.length > 0) {
-          setAllPosts(cachedPosts);
-        } else {
-          const response = await axios.get("/api/message");
-          if (response.status === 200) {
-            setAllPosts(response.data);
-            //  response.data.forEach((post: IPost) => {
-            //  });
-            setCachedPosts(response.data);
-          } else {
-            toast.error("Failed to fetch messages");
-          }
-        }
-      } catch (error) {
-        console.log("Error fetching posts:", error);
-        toast.error(`An error occurred while fetching messages: ${error}`);
-      }
-    };
-
-    fetchPosts();
-  }, [cachedPosts]);
+  
 
   const filterMessages = (searchText: string) => {
     const regex = new RegExp(searchText, "i");

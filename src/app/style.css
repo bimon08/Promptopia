@@ -3,6 +3,7 @@
 .main {
   width: 100vw;
   min-height: 100vh;
+  top: 0%;
   position: fixed;
   display: flex;
   justify-content: center;

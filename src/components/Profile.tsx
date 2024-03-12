@@ -2,7 +2,6 @@ import { IPost } from "../../types/Type";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DialogForm from "./DialogForm";
-import { toast } from "sonner";
 import MessageCard from "./MessageCard";
 
 type ProfilePropsType = {
@@ -40,10 +39,11 @@ const Profile: React.FC<ProfilePropsType> = ({
     setSelectedPost(post);
     setIsDialogOpen(true);
     setIsSelectedPostID(post.id?.toString() || "");
+    
   };
 
   return (
-    <section className="w-full">
+    <section className="w-full mb-16">
       <h1 className="head_text text-left">
         <span className="blue_gradient">{name} Profile</span>
       </h1>

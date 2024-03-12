@@ -1,10 +1,18 @@
+// src/app/api/posts/new/route.ts
+
 import { NextRequest } from "next/server";
 import { prisma } from "prisma/client-prisma";
 import { delete_image_func } from "@src/utils/delete_image_func";
-
+import { PostSchema } from "@src/models/post";
 
 export async function POST(request: NextRequest) {
   const { userId, message, tag, imageUrl, audioUrl } = await request.json();
+
+  try {
+    PostSchema.parse({ id: "", message, tag, imageUrl, audioUrl });
+  } catch (error: any) {
+    return new Response(error.message, { status: 400 });
+  }
 
   try {
     const newPost = await prisma.post.create({
