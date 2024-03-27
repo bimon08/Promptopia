@@ -51,7 +51,9 @@ const DialogForm: React.FC<DialogFormProps> = ({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-h-[calc(100vh-5rem)] max-w-sm overflow-y-auto rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800 dark:text-gray-100 sm:rounded-xl md:max-w-md md:p-8 lg:max-w-lg lg:p-10">
         <DialogTitle>{id ? "Edit Post" : "Create Post"}</DialogTitle>
+
         <form onSubmit={handleSubmit} className="flex  flex-col gap-4 ">
+
           <Textarea
             name="message"
             placeholder="Enter your message here"
@@ -59,6 +61,9 @@ const DialogForm: React.FC<DialogFormProps> = ({
             onChange={updateFormData}
             rows={8}
           />
+
+          
+         
 
           <div className="flex flex-row gap-2 rounded-md ">
             <Input
@@ -78,6 +83,7 @@ const DialogForm: React.FC<DialogFormProps> = ({
             >
               Add <Tag className="ml-1" size={16} />
             </Button>
+            
           </div>
 
           <div className="flex gap-2">
