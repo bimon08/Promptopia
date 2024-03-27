@@ -15,11 +15,15 @@ export const usePosts = () => {
         setData(data);
         return;
       } else {
-        toast.error("Failed to fetch messages");
+        toast.error("Failed to fetch posts");
         return;
       }
     } catch (error: any) {
-      toast.error("An error occurred while fetching messages:", error);
+      if (error.response && error.response.status === 500) {
+        toast.error("No internet connection.");
+      } else {
+        toast.error("An error occurred while fetching posts:", error.message);
+      }
       return;
     }
   }

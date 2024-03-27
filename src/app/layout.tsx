@@ -1,11 +1,13 @@
 import Provider from "@src/components/Provider";
 import "./globals.css";
-import "./style.css";
 import { Toaster } from "sonner";
 import { Poppins } from "next/font/google";
 import { ThemeProvider } from "@src/utils/theme_provider";
+import NavbarContentDemo from "@src/components/NavBar";
+
 // If loading a variable font, you don't need to specify the font weight
 const inter = Poppins({ weight: "400", display: "swap", subsets: ["latin"] });
+
 export const metadata = {
   title: "Build and Grow Together",
   description:
@@ -26,10 +28,8 @@ const RootLayout = ({ children }: RootLayoutPropstype) => {
           disableTransitionOnChange
         >
           <Provider>
-            <div className="main">
-              <div className="gradient" />
-            </div>
-            <main className="app">{children}</main>
+            {/* <NavbarContentDemo /> */}
+            <main className="">{children}</main>
             <Toaster />
           </Provider>
         </ThemeProvider>

@@ -8,6 +8,7 @@ import { ISession } from "../../types/Type";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import NavbarContentDemo from "./NavBar";
+import { TracingBeamDemo } from "./TracingBeamDemo";
 
 interface ProviderPropsType {
   children: ReactNode;
@@ -18,8 +19,9 @@ const Provider = ({ children, session }: ProviderPropsType) => {
   return (
     <SessionProvider session={session}>
       {/* <Nav /> */}
-      <NavbarContentDemo />
+      {/* <NavbarContentDemo /> */}
       {children}
+      {/* <TracingBeamDemo /> */}
     </SessionProvider>
   );
 };

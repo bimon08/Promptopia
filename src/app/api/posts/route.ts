@@ -12,7 +12,6 @@ export const GET = async (request: NextRequest) => {
     });
     return new Response(JSON.stringify(messages), { status: 200 });
   } catch (error) {
-    console.log("GET - Error:", error);
     return new Response("Failed to fetch messages ", { status: 500 });
   }
 };

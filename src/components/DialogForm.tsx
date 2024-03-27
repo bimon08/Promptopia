@@ -7,6 +7,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useUpload } from "@src/hooks/use-upload";
 import Image from "next/image";
+import { SendIcon, Tag } from "lucide-react";
 
 type DialogFormProps = {
   open: boolean;
@@ -48,9 +49,9 @@ const DialogForm: React.FC<DialogFormProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-h-[calc(100vh-5rem)] overflow-y-auto">
+      <DialogContent className="max-h-[calc(100vh-5rem)] max-w-sm overflow-y-auto rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-800 dark:text-gray-100 sm:rounded-xl md:max-w-md md:p-8 lg:max-w-lg lg:p-10">
         <DialogTitle>{id ? "Edit Post" : "Create Post"}</DialogTitle>
-        <form onSubmit={handleSubmit} className="flex  flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex  flex-col gap-4 ">
           <Textarea
             name="message"
             placeholder="Enter your message here"
@@ -59,22 +60,23 @@ const DialogForm: React.FC<DialogFormProps> = ({
             rows={8}
           />
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-row gap-2 rounded-md ">
             <Input
               name="tag"
               id="tagInput"
               type="text"
-              placeholder="Add a tag"
+              placeholder="Write a tag"
               onKeyDown={handleTagInputChange}
               onBlur={handleTagInputBlur}
             />
             <Button
+              variant={"outline"}
               type="button"
               onClick={handleAddTag}
               disabled={isSubmitting}
-              className="self-start rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
+              className="self-start rounded  px-4 py-2 font-bold hover:bg-gray-100 dark:text-white"
             >
-              Add
+              Add <Tag className="ml-1" size={16} />
             </Button>
           </div>
 
@@ -149,7 +151,7 @@ const DialogForm: React.FC<DialogFormProps> = ({
                 onChange={handleFileChange("image")}
               />
             </label>
-            <label htmlFor="audioUpload" className="cursor-pointer">
+            <label htmlFor="audioUpload" className="cursor-pointer  ">
               {isAudioUploading ? "Uploading..." : "Upload Audio"}
               <Input
                 id="audioUpload"
@@ -164,7 +166,10 @@ const DialogForm: React.FC<DialogFormProps> = ({
             <Button
               type="submit"
               disabled={isSubmitting || isImageUploading || isAudioUploading}
+              className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
             >
+              {" "}
+              <SendIcon className="mr-2 h-4 w-4" />
               {isSubmitting ? "Submitting..." : "Submit"}
             </Button>
           </DialogFooter>

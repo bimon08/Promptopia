@@ -2,7 +2,7 @@ import { IPost } from "../../types/Type";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DialogForm from "./DialogForm";
-import MessageCard from "./MessageCard";
+import PostCard from "./PostCard";
 
 type ProfilePropsType = {
   name: string;
@@ -39,30 +39,24 @@ const Profile: React.FC<ProfilePropsType> = ({
     setSelectedPost(post);
     setIsDialogOpen(true);
     setIsSelectedPostID(post.id?.toString() || "");
-    
   };
 
   return (
-    <section className="w-full mb-16">
-      <h1 className="head_text text-left">
-        <span className="blue_gradient">{name} Profile</span>
-      </h1>
-      <p className="desc text-left">{desc}</p>
+    
+    <section className="container mx-auto mb-20 mt-10 min-h-[80vh]">
+      <div className="container mb-40">
+        <h1 className="mb-4 text-left text-5xl font-bold md:text-7xl">
+          <span className="">{name}'s Profile</span>
+        </h1>
+        <p className="desc whitespace-pre-line text-left text-sm font-light leading-snug md:text-base">
+          {desc}
+        </p>
+      </div>
 
-      <div
-        className=" mt-10"
-        style={{
-          columnCount: 2,
-          columnGap: "32px",
-        }}
-      >
+      <div className="container columns-1 gap-8 sm:columns-2 lg:columns-3">
         {data.map((post) => (
-          <div
-            key={post.id}
-            className="break-inside-avoid "
-            style={{ breakInside: "avoid", marginBottom: "32px" }}
-          >
-            <MessageCard
+          <div key={post.id} className="mb-8 break-inside-avoid">
+            <PostCard
               key={post.id}
               post={post}
               handleEdit={() => {

@@ -38,7 +38,7 @@ const UserProfile = ({
         <>
           <UserImage image={post.user.image} />
           <div className="flex flex-col">
-            <h3 className="font-satoshi font-semibold text-gray-900">
+            <h3 className="font-satoshi font-semibold text-gray-900 dark:text-white">
               {post.user.username}
             </h3>
             <p className="font-inter text-sm text-gray-500">

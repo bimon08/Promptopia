@@ -7,6 +7,7 @@ import Profile from "@src/components/Profile";
 import { toast } from "sonner";
 import { IPost } from "types/Type";
 import axios from "axios";
+import NavBar from "@src/components/NavBar";
 
 const MyProfile: React.FC = () => {
   const router = useRouter();
@@ -44,12 +45,12 @@ const MyProfile: React.FC = () => {
 
   const handleDelete = async (post: IPost) => {
     const hasConfirmed = window.confirm(
-      "Are you sure you want to delete this message?",
+      "Are you sure you want to delete this post?",
     );
     if (hasConfirmed) {
       if (typeof post.id === "undefined") {
-        console.error("Cannot delete the message as the post ID is undefined.");
-        toast.error("Failed to delete message: Post ID is undefined.");
+        console.error("Cannot delete the post as the post ID is undefined.");
+        toast.error("Failed to delete post: Post ID is undefined.");
         return;
       }
 
@@ -57,18 +58,21 @@ const MyProfile: React.FC = () => {
         await axios.delete(`/api/posts/${post.id.toString()}`);
         const filteredPosts = posts.filter((p) => p.id !== post.id);
         setPosts(filteredPosts);
-        toast.success("message deleted successfully");
+        toast.success("post deleted successfully");
       } catch (error) {
-        console.error("Error deleting message:", error);
-        toast.error("Failed to delete message");
+        console.error("Error deleting post:", error);
+        toast.error("Failed to delete post");
       }
     }
   };
 
   return (
     <div>
+      <>
+        <NavBar />
+      </>
       <Profile
-        name="My"
+        name={session?.user.name || "Your"}
         desc="Welcome to your personalized profile page"
         data={posts}
         handleEdit={handleEdit}

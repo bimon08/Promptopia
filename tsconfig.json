@@ -48,6 +48,6 @@
     "src/utils/database.ts",
     "app/create-message/page.jsx",
     "src/components/Feed.tsx"
-  ],
+, "plugins/colorVariables.js"  ],
   "exclude": ["node_modules"]
 }
