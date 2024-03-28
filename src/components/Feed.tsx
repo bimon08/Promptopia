@@ -4,7 +4,7 @@ import PostCard from "./PostCard";
 
 interface FeedProps {
   posts: IPost[];
-  handleTagClick: (tag: string) => void;
+  handleTagClick: (tag: string) => void; 
 }
 
 const Feed: React.FC<FeedProps> = ({ posts, handleTagClick }) => {
