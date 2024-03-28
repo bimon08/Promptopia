@@ -42,11 +42,10 @@ const Profile: React.FC<ProfilePropsType> = ({
   };
 
   return (
-    
     <section className="container mx-auto mb-20 mt-10 min-h-[80vh]">
       <div className="container mb-40">
         <h1 className="mb-4 text-left text-5xl font-bold md:text-7xl">
-          <span className="">{name}'s Profile</span>
+          <span className="">{name}&apos;s Profile</span>
         </h1>
         <p className="desc whitespace-pre-line text-left text-sm font-light leading-snug md:text-base">
           {desc}

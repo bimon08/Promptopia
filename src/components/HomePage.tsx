@@ -1,13 +1,12 @@
 "use client";
 
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { SearchIcon } from "lucide-react";
 import { IPost } from "types/Type";
 import { usePosts } from "@src/hooks/use-posts";
 import Feed from "./Feed";
 import { useRouter } from "next/navigation";
-
 
 const HomePage = () => {
   const { data: allPosts, refetch } = usePosts();
@@ -16,16 +15,18 @@ const HomePage = () => {
   const [searchedResults, setSearchedResults] = useState<IPost[]>([]);
   const router = useRouter();
 
-
-  const filterMessages = (searchText: string) => {
-    const regex = new RegExp(searchText, "i");
-    return allPosts.filter(
-      (item) =>
-        regex.test(item.user?.username || "") ||
-        regex.test(item.tag || "") ||
-        regex.test(item.message || ""),
-    );
-  };
+  const filterMessages = useCallback(
+    (searchText: string) => {
+      const regex = new RegExp(searchText, "i");
+      return allPosts.filter(
+        (item) =>
+          regex.test(item.user?.username || "") ||
+          regex.test(item.tag || "") ||
+          regex.test(item.message || ""),
+      );
+    },
+    [allPosts],
+  );
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value;
@@ -34,39 +35,40 @@ const HomePage = () => {
     setSearchedResults(searchResult);
   };
 
- const handleTagClick = (tag: string) => {
+  const handleTagClick = (tag: string) => {
     setSearchText(tag);
     const searchResult = filterMessages(tag);
     setSearchedResults(searchResult);
     router.push(`/?tag=${tag}`);
   };
-   useEffect(() => {
-     const handlePopState = () => {
-       const urlParams = new URLSearchParams(window.location.search);
-       const tag = urlParams.get("tag");
-       if (tag) {
-         setSearchText(tag);
-         const searchResult = filterMessages(tag);
-         setSearchedResults(searchResult);
-       } else {
-         setSearchText("");
-         setSearchedResults([]);
-       }
-     };
-     const urlParams = new URLSearchParams(window.location.search);
-     const initialTag = urlParams.get("tag");
-     if (initialTag) {
-       setSearchText(initialTag);
-       const searchResult = filterMessages(initialTag);
-       setSearchedResults(searchResult);
-     }
 
-     window.addEventListener("popstate", handlePopState);
+  useEffect(() => {
+    const handlePopState = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tag = urlParams.get("tag");
+      if (tag) {
+        setSearchText(tag);
+        const searchResult = filterMessages(tag);
+        setSearchedResults(searchResult);
+      } else {
+        setSearchText("");
+        setSearchedResults([]);
+      }
+    };
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialTag = urlParams.get("tag");
+    if (initialTag) {
+      setSearchText(initialTag);
+      const searchResult = filterMessages(initialTag);
+      setSearchedResults(searchResult);
+    }
 
-     return () => {
-       window.removeEventListener("popstate", handlePopState);
-     };
-   }, [allPosts]);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [allPosts, filterMessages]);
 
   const bibleVerse = [
     "So then, let us pursue what makes for peace",
@@ -94,9 +96,7 @@ const HomePage = () => {
               Build and Grow
             </h1>
             <div className="">
-              <div
-                className="whitespace-pre-line text-sm font-light leading-snug md:text-base"
-              >
+              <div className="whitespace-pre-line text-sm font-light leading-snug md:text-base">
                 {bibleVerse.map((verse, index) => (
                   <p key={index}>{verse}</p>
                 ))}
@@ -132,4 +132,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

@@ -150,6 +150,7 @@ export const useUpload = ({ post, id, onSubmit, onClose }: useUploadProps) => {
       audioUrl,
       session?.user?.id,
       resetForm,
+      onClose,
     ],
   );
 
