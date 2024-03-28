@@ -5,7 +5,7 @@ import { PromptCardList } from "./PromptCardList";
 import { PostType } from "./Type";
 import { usePrompt } from "@src/hooks/use-prompt";
 
-interface FeedProps {
+ interface FeedProps {
   data: PostType[];
   handleTagClick: (tagName: string) => void;
 }
