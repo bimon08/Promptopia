@@ -69,7 +69,7 @@ const MyProfile: React.FC = () => {
   return (
     <div>
       <>
-        <NavBar />
+        {/* <NavBar /> */}
       </>
       <Profile
         name={session?.user.name || "Your"}

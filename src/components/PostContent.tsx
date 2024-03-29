@@ -38,8 +38,6 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
     };
   }, []);
 
-  
-
   return (
     <div className="flex flex-col items-center justify-center rounded-lg text-center ">
       {post.imageUrl && (
@@ -54,17 +52,19 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
         </div>
       )}
       {post.message && (
-        <div className="mb-4 w-full max-w-xs rounded-xl bg-white p-4 text-center shadow-md dark:bg-gray-600 sm:w-[200px] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
-          {post.message.split("\\n").map((line, index) => (
-            <p
-              key={index}
-              className={`text-gray-700 dark:text-gray-300 ${
-                line.includes(" ") ? "text-justify" : ""
-              }`}
-            >
-              {line}
-            </p>
-          ))}
+        <div className="px-8">
+          <div className="mb-4 w-full max-w-[300px] rounded-xl bg-white p-4 text-center shadow-md dark:bg-gray-600 sm:w-[300px] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+            {post.message.split("\\n").map((line, index) => (
+              <p
+                key={index}
+                className={`text-gray-700 dark:text-gray-300 ${
+                  line.includes(" ") ? "text-justify" : ""
+                }`}
+              >
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
       )}
       {post.audioUrl && (

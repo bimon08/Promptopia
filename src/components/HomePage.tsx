@@ -79,19 +79,17 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="h-80vh fixed inset-0 flex-1">
+      <div className="h-80vh fixed inset-0 flex flex-1 items-center justify-center overflow-hidden">
         <Image
           src="/assets/images/istock.webp"
           alt="Background"
           layout="fill"
           objectFit="cover"
           quality={100}
-          objectPosition="center"
-          className="z-0 -mt-[95px]"
-          style={{ transform: "scaleX(-1)" }}
+          className="z-0 object-[left_-280px_top_0px] sm:object-center"
         />
         <section className="relative z-10 mt-[20%] flex flex-col items-center justify-center px-4 pb-10 font-inter text-white md:mt-[10%]">
-          <div className="container text-center">
+          <div className="container sm:-mt-20 text-center ">
             <h1 className="mb-4 text-5xl font-bold md:text-7xl">
               Build and Grow
             </h1>
@@ -121,7 +119,7 @@ const HomePage = () => {
           </div>
         </section>
       </div>
-      <div className="relative z-20 mt-[70vh] h-full w-full rounded-3xl border border-gray-100 bg-purple-900 bg-opacity-0 bg-clip-padding backdrop-blur-3xl backdrop-filter">
+      <div className="relative z-20 mt-[70vh] h-full w-full rounded-3xl py-1  bg-purple-900 bg-opacity-0 bg-clip-padding backdrop-blur-3xl backdrop-filter">
         <Feed
           posts={searchText ? searchedResults : allPosts}
           handleTagClick={handleTagClick}

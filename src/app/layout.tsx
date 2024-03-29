@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import { Poppins } from "next/font/google";
 import { ThemeProvider } from "@src/utils/theme_provider";
 import NavbarContentDemo from "@src/components/NavBar";
+import NavBar from "@src/components/NavBar";
 
 // If loading a variable font, you don't need to specify the font weight
 const inter = Poppins({ weight: "400", display: "swap", subsets: ["latin"] });
@@ -29,7 +30,10 @@ const RootLayout = ({ children }: RootLayoutPropstype) => {
         >
           <Provider>
             {/* <NavbarContentDemo /> */}
-            <main className="">{children}</main>
+            <main className="">
+              <NavBar />
+              {children}
+            </main>
             <Toaster />
           </Provider>
         </ThemeProvider>

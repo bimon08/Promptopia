@@ -52,9 +52,9 @@ const Profile: React.FC<ProfilePropsType> = ({
         </p>
       </div>
 
-      <div className="container columns-1 gap-8 sm:columns-2 lg:columns-3">
+      <div className="  columns-1 gap-8 sm:columns-2 lg:columns-3">
         {data.map((post) => (
-          <div key={post.id} className="mb-8 break-inside-avoid">
+          <div key={post.id} className="mb-8 break-inside-avoid ">
             <PostCard
               key={post.id}
               post={post}
