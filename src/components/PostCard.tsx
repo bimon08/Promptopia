@@ -60,55 +60,49 @@ const PostCard = ({
 
   return (
     <motion.div
-      className={cn(
-        "rounded-2xl shadow-lg transition-shadow duration-300 hover:shadow-xl",
-        theme === "light" ? "bg-slate-200" : "bg-slate-800",
+  className={cn(
+    "rounded-2xl shadow-lg transition-shadow duration-300 hover:shadow-xl",
+    theme === "light" ? "bg-slate-200" : "bg-slate-800"
+  )}
+  initial="hidden"
+  animate="visible"
+  variants={cardVariants}
+  transition={{ duration: 0.5 }}
+  layout
+>
+  <CardContainer className="md:px-4">
+    <CardBody className="relative flex h-auto flex-col items-center gap-8 rounded-2xl md:px-4">
+      <CardItem className="mt-6 px-8 text-xl font-bold md:px-4">
+        <UserProfile post={post} onClick={handleProfileClick} copied={copied} handleCopy={handleCopy} />
+      </CardItem>
+      <CardItem translateZ={20} className="flex flex-col items-center md:px-4">
+        <PostContent post={post} handleTagClick={handleTagClick} />
+      </CardItem>
+      {isOwnerViewing && (
+        <CardItem className="mb-5 flex justify-center gap-4 rounded-b-2xl p-2 md:p-4">
+          <button
+            className={cn(
+              "rounded-3xl px-4 py-2 transition-colors duration-300 hover:text-green-600 md:px-8",
+              theme === "light" ? "bg-slate-300" : "bg-slate-700"
+            )}
+            onClick={handleEdit}
+          >
+            Edit
+          </button>
+          <button
+            className={cn(
+              "rounded-3xl px-4 py-2 transition-colors duration-300 hover:text-red-600 md:px-8",
+              theme === "light" ? "bg-slate-300" : "bg-slate-700"
+            )}
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
+        </CardItem>
       )}
-      initial="hidden"
-      animate="visible"
-      variants={cardVariants}
-      transition={{ duration: 0.5 }}
-      layout
-    >
-      <CardContainer className=" ">
-        <CardBody className="relative flex h-auto flex-col items-center gap-8 rounded-2xl ">
-          <CardItem className="mt-6 px-6 text-xl font-bold">
-            <UserProfile
-              post={post}
-              onClick={handleProfileClick}
-              copied={copied}
-              handleCopy={handleCopy}
-            />
-          </CardItem>
-          <CardItem translateZ={20} className="flex flex-col items-center">
-            <PostContent post={post} handleTagClick={handleTagClick} />
-          </CardItem>
-
-          {isOwnerViewing && (
-            <CardItem className="mb-5 flex justify-center gap-4 rounded-b-2xl p-2">
-              <button
-                className={cn(
-                  "rounded-3xl hover:text-green-600 px-4 py-2  transition-colors duration-300",
-                  
-                )}
-                onClick={handleEdit}
-              >
-                Edit
-              </button>
-              <button
-                className={cn(
-                  "rounded-3xl px-4 py-2 transition-colors duration-300 hover:text-red-600",
-               
-                )}
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
-            </CardItem>
-          )}
-        </CardBody>
-      </CardContainer>
-    </motion.div>
+    </CardBody>
+  </CardContainer>
+</motion.div>
   );
 };
 

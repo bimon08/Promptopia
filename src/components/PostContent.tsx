@@ -41,35 +41,32 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
   
 
   return (
-    <div className="flex min-w-fit max-w-[300px] flex-col items-center justify-center rounded-lg text-center">
+    <div className="flex flex-col items-center justify-center rounded-lg text-center ">
       {post.imageUrl && (
-        <div className="mb-4">
+        <div className="mb-4 w-full sm:w-[200px] md:w-[400px] lg:w-[300px] xl:w-[300px]">
           <Image
             src={post.imageUrl}
             alt="Description of the image"
             width={300}
             height={200}
-            className="rounded-2xl object-cover"
+            className="h-auto w-full rounded-2xl object-cover"
           />
         </div>
       )}
-
       {post.message && (
-        <div className="mb-4 items-center justify-center rounded-xl  bg-white p-4 text-center shadow-md dark:bg-gray-600">
-          {post.message.split("\n").map((line, index) => (
+        <div className="mb-4 w-full max-w-xs rounded-xl bg-white p-4 text-center shadow-md dark:bg-gray-600 sm:w-[200px] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+          {post.message.split("\\n").map((line, index) => (
             <p
               key={index}
-              className={cn(
-                "text-gray-700 dark:text-gray-300",
-                line.includes(" ") && "text-justify",
-              )}
+              className={`text-gray-700 dark:text-gray-300 ${
+                line.includes(" ") ? "text-justify" : ""
+              }`}
             >
               {line}
             </p>
           ))}
         </div>
       )}
-
       {post.audioUrl && (
         <CardItem className="mb-4 w-full" translateZ={20}>
           <audio controls ref={audioRef} className="w-full">
@@ -78,16 +75,15 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
           </audio>
         </CardItem>
       )}
-
       <motion.div
         ref={containerRef}
-        className="mb-4 max-w-[320px] space-x-2 overflow-x-auto whitespace-nowrap"
+        className="mb-4 max-w-full space-x-2 overflow-x-auto whitespace-nowrap sm:max-w-[298px]"
         style={{
           WebkitOverflowScrolling: "touch",
           msOverflowStyle: "none",
           scrollbarWidth: "none",
         }}
-        >
+      >
         {Array.isArray(post.tag) &&
           post.tag.map((tag, index) => (
             <span
