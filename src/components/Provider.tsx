@@ -2,7 +2,6 @@
 "use client";
 
 import { SessionProvider, useSession } from "next-auth/react";
-import Nav from "./Nav";
 import { ReactNode, useEffect } from "react";
 import { ISession } from "../../types/Type";
 import { useRouter } from "next/navigation";
@@ -18,10 +17,7 @@ interface ProviderPropsType {
 const Provider = ({ children, session }: ProviderPropsType) => {
   return (
     <SessionProvider session={session}>
-      {/* <Nav /> */}
-      {/* <NavbarContentDemo /> */}
       {children}
-      {/* <TracingBeamDemo /> */}
     </SessionProvider>
   );
 };
