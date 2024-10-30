@@ -10,9 +10,26 @@ export const GET = async (request: NextRequest) => {
         user: true,
       },
     });
-    return new Response(JSON.stringify(messages), { status: 200 });
+    return new Response(JSON.stringify(messages), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    });
   } catch (error) {
-    return new Response("Failed to fetch messages ", { status: 500 });
+    console.error("Error fetching posts:", error);
+    if (error instanceof Error) {
+      console.error("Error details:", {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+    }
+    return new Response(JSON.stringify({
+      error: "Unable to retrieve posts at this time",
+      message: "We apologize for the inconvenience. Please try again later."
+    }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 };
 
@@ -20,15 +37,20 @@ export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
     const validatedData = PostSchema.safeParse(requestBody);
+    
     if (!validatedData.success) {
-      return new Response(
-        JSON.stringify({ errors: validatedData.error.issues }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        },
-      );
+      return new Response(JSON.stringify({
+        error: "Invalid post data",
+        details: validatedData.error.issues.map(issue => ({
+          field: issue.path.join('.'),
+          message: issue.message
+        }))
+      }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
+    
     const { creator, message, tag, imageUrl, audioUrl } = validatedData.data;
     const newPost = await prisma.post.create({
       data: {
@@ -43,7 +65,11 @@ export async function POST(request: NextRequest) {
         },
       },
     });
-    return new Response(JSON.stringify(newPost), {
+    
+    return new Response(JSON.stringify({
+      message: "Post created successfully",
+      post: newPost
+    }), {
       status: 201,
       headers: {
         "Content-Type": "application/json",
@@ -51,17 +77,26 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: unknown) {
     if (error instanceof ZodError) {
-      return new Response(JSON.stringify(error.issues), {
+      return new Response(JSON.stringify({
+        error: "Invalid data format",
+        details: error.issues.map(issue => ({
+          field: issue.path.join('.'),
+          message: issue.message
+        }))
+      }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
-    if (error instanceof Error) {
-      console.error("Failed to create a new post:", error.message);
-    } else {
-      console.error("An unknown error occurred while creating a new post");
-    }
-
-    return new Response("Internal Server Error", { status: 500 });
+    
+    console.error("Error creating new post:", error instanceof Error ? error.message : "Unknown error");
+    
+    return new Response(JSON.stringify({
+      error: "Unable to create post",
+      message: "We encountered an issue while creating your post. Please try again later."
+    }), { 
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 }

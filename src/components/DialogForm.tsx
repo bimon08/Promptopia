@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from "./ui/dialog";
 import { IPost } from "../../types/Type";
 import { Textarea } from "./ui/textarea";
@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { useUpload } from "@src/hooks/use-upload";
 import Image from "next/image";
 import { SendIcon, Tag } from "lucide-react";
+import { useEffect } from "react";
 
 type DialogFormProps = {
   open: boolean;
@@ -64,13 +65,16 @@ const DialogForm: React.FC<DialogFormProps> = ({
               isSubmitting={isSubmitting}
             />
             <TagList tags={formData.tag} onRemoveTag={removeTag} />
-            <MediaPreviews
-              selectedImage={selectedImage}
-              selectedAudio={selectedAudio}
-              audioObjectUrl={audioObjectUrl}
-              onRemoveImage={() => handleFileRemove("image")}
-              onRemoveAudio={() => handleFileRemove("audio")}
-            />
+            {post && (
+              <MediaPreviews
+                selectedImage={selectedImage}
+                selectedAudio={selectedAudio}
+                audioObjectUrl={audioObjectUrl}
+                onRemoveImage={() => handleFileRemove("image")}
+                onRemoveAudio={() => handleFileRemove("audio")}
+                post={post}
+              />
+            )}
             <FileUpload
               onImageUpload={handleFileChange("image")}
               onAudioUpload={handleFileChange("audio")}
@@ -164,57 +168,84 @@ const TagList: React.FC<{
   </div>
 );
 
+
 const MediaPreviews: React.FC<{
   selectedImage: File | null;
   selectedAudio: File | null;
   audioObjectUrl: string | null;
   onRemoveImage: () => void;
   onRemoveAudio: () => void;
+  post?: IPost;
 }> = ({
   selectedImage,
   selectedAudio,
   audioObjectUrl,
   onRemoveImage,
   onRemoveAudio,
-}) => (
-  <div className="flex flex-col gap-4">
-    {selectedImage && (
-      <div className="flex flex-col gap-2">
-        <Image
-          width={200}
-          height={200}
-          src={URL.createObjectURL(selectedImage)}
-          alt="Preview"
-          className="h-auto w-full"
-        />
-        <button
-          type="button"
-          onClick={onRemoveImage}
-          className="text-red-500 hover:text-red-700"
-        >
-          Remove Image
-        </button>
-      </div>
-    )}
-    {selectedAudio && (
-      <div className="flex flex-col gap-2">
-        <audio
-          src={audioObjectUrl || undefined}
-          controls
-          preload="auto"
-          className="w-full"
-        />
-        <button
-          type="button"
-          onClick={onRemoveAudio}
-          className="text-red-500 hover:text-red-700"
-        >
-          Remove Audio
-        </button>
-      </div>
-    )}
-  </div>
-);
+  post,
+}) => {
+  const [currentAudioUrl, setCurrentAudioUrl] = useState<string | null>(
+    audioObjectUrl,
+  );
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+  // Effect for updating audio URL
+  useEffect(() => {
+    if (post?.audioUrl && !selectedAudio) {
+      setCurrentAudioUrl(post.audioUrl);
+    } else if (audioObjectUrl) {
+      setCurrentAudioUrl(audioObjectUrl);
+    }
+  }, [post?.audioUrl, audioObjectUrl, selectedAudio]);
+
+  // Effect for updating image URL
+  useEffect(() => {
+    if (post?.imageUrl && !selectedImage) {
+      setCurrentImageUrl(post.imageUrl);
+    } else if (selectedImage) {
+      setCurrentImageUrl(URL.createObjectURL(selectedImage));
+    }
+  }, [post?.imageUrl, selectedImage]);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {currentImageUrl && (
+        <div className="flex flex-col gap-2">
+          <Image
+            width={200}
+            height={200}
+            src={currentImageUrl}
+            alt="Preview"
+            className="h-auto w-full"
+          />
+          <button
+            type="button"
+            onClick={onRemoveImage}
+            className="text-red-500 hover:text-red-700"
+          >
+            Remove Image
+          </button>
+        </div>
+      )}
+      {currentAudioUrl && (
+        <div className="flex flex-col gap-2">
+          <audio
+            src={currentAudioUrl}
+            controls
+            preload="auto"
+            className="w-full"
+          />
+          <button
+            type="button"
+            onClick={onRemoveAudio}
+            className="text-red-500 hover:text-red-700"
+          >
+            Remove Audio
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const FileUpload: React.FC<{
   onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;

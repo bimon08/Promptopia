@@ -12,6 +12,7 @@ export const GET = async (request: NextRequest, { params }: ParamType) => {
         id: true,
         message: true,
         imageUrl: true,
+        audioUrl: true,
         tag: true,
         user: {
           select: {

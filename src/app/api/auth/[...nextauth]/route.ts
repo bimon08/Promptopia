@@ -24,7 +24,7 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, user }): Promise<Session> {
+    async session({ session, token }): Promise<Session> {
       try {
         if (!session) {
           return { user: { name: "", email: "", image: "" }, expires: "" };

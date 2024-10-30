@@ -1,16 +1,13 @@
-// d:/Projects/Promptopia/src/components/PostContent.tsx
-
 import React, { useRef, useEffect } from "react";
 import Image from "next/image";
-import { cn } from "@src/lib/utils";
-import { CardBody, CardContainer, CardItem } from "./ui/3d-card";
+import { CardItem } from "./ui/3d-card";
 import { motion, useAnimation } from "framer-motion";
 
 type PostContentProps = {
   post: {
     imageUrl?: string;
     message?: string;
-    tag: string;
+    tag: string | string[];
     audioUrl?: string;
   };
   handleTagClick: (postTag: string) => void;
@@ -18,7 +15,6 @@ type PostContentProps = {
 
 const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const containerRef = useRef<null | HTMLDivElement>(null);
   const controls = useAnimation();
 
   useEffect(() => {
@@ -39,9 +35,9 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg text-center ">
+    <div className="flex flex-col items-center justify-center rounded-lg text-center">
       {post.imageUrl && (
-        <div className="mb-4 w-full sm:w-[200px] md:w-[400px] lg:w-[300px] xl:w-[300px]">
+        <div className="mb-4 w-[250px] sm:w-[200px] md:w-[400px] lg:w-[400px] xl:w-[450px]">
           <Image
             src={post.imageUrl}
             alt="Description of the image"
@@ -52,23 +48,23 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
         </div>
       )}
       {post.message && (
-        <div className="px-8">
-          <div className="mb-4 w-full max-w-[300px] rounded-xl bg-white p-4 text-center shadow-md dark:bg-gray-600 sm:w-[300px] sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
-            {post.message.split("\\n").map((line, index) => (
+        <div className="px-14 sm:px-96 md:px-8">
+          <div className="mb-4 w-full max-w-xs rounded-xl bg-white p-4 text-left shadow-md dark:bg-gray-600 sm:w-[260px] sm:max-w-sm md:w-[300px] md:max-w-md lg:w-[400px] xl:max-w-xl">
+            {post.message.split("\n").map((line, index) => (
               <p
                 key={index}
                 className={`text-gray-700 dark:text-gray-300 ${
-                  line.includes(" ") ? "text-justify" : ""
+                  line.trim() === "" ? "mb-4" : ""
                 }`}
               >
-                {line}
+                {line || <br />}
               </p>
             ))}
           </div>
         </div>
       )}
       {post.audioUrl && (
-        <CardItem className="mb-4 w-full" translateZ={20}>
+        <CardItem className="mb-4 w-[250px] lg:w-[350px]" translateZ={20}>
           <audio controls ref={audioRef} className="w-full">
             <source src={post.audioUrl} type="audio/mpeg" />
             Your browser does not support the audio element.
@@ -76,8 +72,7 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
         </CardItem>
       )}
       <motion.div
-        ref={containerRef}
-        className="mb-4 max-w-full space-x-2 overflow-x-auto whitespace-nowrap sm:max-w-[298px]"
+        className="mb-8 mt-4 max-w-full space-x-2 overflow-x-auto whitespace-nowrap sm:max-w-[298px]"
         style={{
           WebkitOverflowScrolling: "touch",
           msOverflowStyle: "none",
@@ -89,7 +84,7 @@ const PostContent: React.FC<PostContentProps> = ({ post, handleTagClick }) => {
             <span
               key={index}
               onClick={() => handleTagClick(tag)}
-              className="cursor-pointer rounded-full bg-gray-600 px-3 py-1 text-sm text-white dark:text-gray-300"
+              className="cursor-pointer mb-6 rounded-full bg-gray-600 px-3 py-1 text-sm text-white dark:text-gray-300"
             >
               #{tag.trim()}
             </span>

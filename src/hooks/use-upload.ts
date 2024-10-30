@@ -54,10 +54,10 @@ export const useUpload = ({ post, id, onSubmit, onClose }: useUploadProps) => {
   useEffect(() => {
     if (post) {
       setFormData({
-        message: post?.message || "",
-        tag: post?.tag ? (Array.isArray(post.tag) ? post.tag : [post.tag]) : [],
-        image: post?.imageUrl || "",
-        audio: post?.audioUrl || "",
+        message: post.message || "",
+        tag: post.tag ? (Array.isArray(post.tag) ? post.tag : [post.tag]) : [],
+        image: post.imageUrl || "",
+        audio: post.audioUrl || "",
       });
     }
   }, [post]);
@@ -84,75 +84,84 @@ export const useUpload = ({ post, id, onSubmit, onClose }: useUploadProps) => {
     });
   }, [setSelectedAudio, setSelectedImage]);
 
-  const handleSubmit = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      setIsSubmitting(true);
+ const handleSubmit = useCallback(
+   async (event: React.FormEvent<HTMLFormElement>) => {
+     event.preventDefault();
+     setIsSubmitting(true);
 
-      try {
-        if (selectedImage) {
-          await handleFileChange("image")({
-            target: { files: [selectedImage] },
-          } as unknown as ChangeEvent<HTMLInputElement>);
-        }
+     try {
+       // Handle Image Upload
+       if (selectedImage) {
+         await handleFileChange("image")({
+           target: { files: [selectedImage] },
+         } as unknown as ChangeEvent<HTMLInputElement>);
+       }
 
-        if (selectedAudio) {
-          await handleFileChange("audio")({
-            target: { files: [selectedAudio] },
-          } as unknown as ChangeEvent<HTMLInputElement>);
-        }
+       // Handle Audio Upload
+       if (selectedAudio) {
+         await handleFileChange("audio")({
+           target: { files: [selectedAudio] },
+         } as unknown as ChangeEvent<HTMLInputElement>);
+       }
 
-        const validatedData = PostSchema.parse({
-          message: formData.message,
-          tag: formData.tag,
-          imageUrl: imageUrl || "",
-          audioUrl: audioUrl || "",
-          creator: session?.user?.id || "",
-        });
+       // Prepare Data for Submission
+       const validatedData = PostSchema.parse({
+         message: formData.message,
+         tag: formData.tag,
+         imageUrl: imageUrl || post?.imageUrl || "", // Retain previous image URL if no new image is uploaded
+         audioUrl: audioUrl || post?.audioUrl || "", // Retain previous audio URL if no new audio is uploaded
+         creator: session?.user?.id || "",
+       });
 
-        const payload = {
-          ...validatedData,
-        };
+       const payload = {
+         ...validatedData,
+       };
 
-        const response = id
-          ? await axios.patch(`/api/posts/${id}`, payload)
-          : await axios.post("/api/posts", payload);
+       // Submit Data
+       const response = id
+         ? await axios.patch(`/api/posts/${id}`, payload)
+         : await axios.post("/api/posts", payload);
 
-        if (response.status === 200 || response.status === 201) {
-          toast.success("Post submitted successfully");
-          onSubmit(response.data);
-          resetForm();
-          if (onClose) {
-            onClose();
-          }
-        } else {
-          toast.error("Failed to submit post");
-        }
-      } catch (error: any) {
-        console.error("Error submitting post", error);
-        if (error instanceof z.ZodError) {
-          toast.error(error.issues.map((issue) => issue.message).join("\n"));
-        } else {
-          toast.error("An error occurred while submitting the post");
-        }
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    [
-      formData,
-      id,
-      onSubmit,
-      selectedAudio,
-      selectedImage,
-      handleFileChange,
-      imageUrl,
-      audioUrl,
-      session?.user?.id,
-      resetForm,
-      onClose,
-    ],
-  );
+       if (response.status === 200 || response.status === 201) {
+         toast.success("Post submitted successfully");
+         onSubmit(response.data);
+
+         // Reset form if we're creating a new post (not editing)
+         if (!id) {
+           resetForm();
+         }
+
+         if (onClose) {
+           onClose();
+         }
+       } else {
+         toast.error("Failed to submit post");
+       }
+     } catch (error: any) {
+       console.error("Error submitting post", error);
+       if (error instanceof z.ZodError) {
+         toast.error(error.issues.map((issue) => issue.message).join("\n"));
+       } else {
+         toast.error("An error occurred while submitting the post");
+       }
+     } finally {
+       setIsSubmitting(false);
+     }
+   },
+   [
+     formData,
+     id,
+     onSubmit,
+     selectedAudio,
+     selectedImage,
+     handleFileChange,
+     imageUrl,
+     audioUrl,
+     session?.user?.id,
+     resetForm,
+     onClose,
+   ],
+ );
 
   return {
     handleAddTag,
