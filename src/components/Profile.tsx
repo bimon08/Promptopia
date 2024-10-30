@@ -7,7 +7,7 @@ import PostCard from "./PostCard";
 type ProfilePropsType = {
   name: string;
   desc: string;
-  data: any;
+  data?: any;
   posts: IPost[];
   handleEdit?: (post: IPost) => void;
   handleDelete?: (post: IPost) => void;

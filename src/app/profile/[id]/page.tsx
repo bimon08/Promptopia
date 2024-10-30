@@ -27,7 +27,7 @@ const UserProfile = ({ params }: ParamType) => {
     <Profile
       name={userName ?? ""}
       desc={`Welcome to ${userName}'s personalized profile page. Explore ${userName}'s exceptional messages and be inspired by the power of their imagination`}
-      data={userPosts}
+      posts={userPosts}
     />
   );
 };
