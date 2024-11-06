@@ -110,6 +110,7 @@ const MessageInput: React.FC<{
     rows={8}
     className="w-full"
   />
+  
 );
 
 const TagInput: React.FC<{
@@ -126,16 +127,16 @@ const TagInput: React.FC<{
       placeholder="Write a tag"
       onKeyDown={onKeyDown}
       onBlur={onBlur}
-      className="w-full sm:w-auto"
+      className="w-full rounded border border-gray-300 bg-gray-100 text-gray-800 placeholder-gray-500 focus:border-blue-500 sm:w-auto"
     />
     <Button
       variant="outline"
       type="button"
       onClick={onAddTag}
       disabled={isSubmitting}
-      className="self-start rounded px-4 py-2 font-bold hover:bg-gray-100 dark:text-white"
+      className="self-start rounded border-gray-300  px-4 py-2 font-bold text-gray-700 hover:bg-blue-50 hover:text-blue-600 active:bg-blue-100 dark:text-gray-200 dark:hover:bg-gray-700"
     >
-      Add <Tag className="ml-1" size={16} />
+      Add <Tag className="ml-1 text-blue-600" size={16} />
     </Button>
   </div>
 );
@@ -149,20 +150,16 @@ const TagList: React.FC<{
       tags.map((tag, index) => (
         <div
           key={index}
-          className="flex items-center gap-1 rounded bg-gray-200 px-2 py-1"
+          className="flex items-center gap-1 rounded border border-blue-300 bg-blue-100 px-2 py-1 text-blue-700"
         >
-          {typeof tag === "string" && (
-            <>
-              <div>{tag}</div>
-              <button
-                type="button"
-                onClick={() => onRemoveTag(tag)}
-                className="text-red-500 hover:text-red-700"
-              >
-                x
-              </button>
-            </>
-          )}
+          <div className="font-medium">{tag}</div>
+          <button
+            type="button"
+            onClick={() => onRemoveTag(tag)}
+            className="ml-1 text-red-500 hover:text-red-700 focus:outline-none"
+          >
+            x
+          </button>
         </div>
       ))}
   </div>

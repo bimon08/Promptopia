@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { IPost } from "types/Type";
 import axios from "axios";
 import NavBar from "@src/components/NavBar";
+import { AuroraBackground } from "@src/components/ui/aurora-background";
 
 const MyProfile: React.FC = () => {
   const router = useRouter();
@@ -72,8 +73,8 @@ const MyProfile: React.FC = () => {
   };
 
   return (
-    <div>
-      <>{/* <NavBar /> */}</>
+    <AuroraBackground>
+      <NavBar />
       <Profile
         data={session}
         name={session?.user.name || "Your"}
@@ -82,7 +83,7 @@ const MyProfile: React.FC = () => {
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />
-    </div>
+    </AuroraBackground>
   );
 };
 

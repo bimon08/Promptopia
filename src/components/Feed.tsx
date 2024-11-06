@@ -8,18 +8,6 @@ interface FeedProps {
 }
 
 const Feed: React.FC<FeedProps> = ({ posts, handleTagClick }) => {
-  // useEffect(() => {
-  //   console.log("All posts data:", posts);
-  //   console.log(
-  //     "Posts with audio URLs:",
-  //     posts.filter((post) => post.audioUrl),
-  //   );
-  //   console.log(
-  //     "Audio URLs:",
-  //     posts.map((post) => post.audioUrl).filter(Boolean),
-  //   );
-  // }, [posts]);
-
   return (
     <section className="mx-[10px] mb-20 mt-10 min-h-[80vh]">
       <div className="columns-1 gap-8 sm:columns-2 lg:columns-3">

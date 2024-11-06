@@ -53,7 +53,7 @@ const RootLayout = ({ children }: RootLayoutPropstype) => {
         >
           <Provider>
             <main className="">
-              <NavBar />
+              {/* <NavBar /> */}
               {children}
             </main>
             <Toaster />

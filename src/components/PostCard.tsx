@@ -26,14 +26,11 @@ const PostCard = ({
   const pathName = usePathname();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-
   const [copied, setCopied] = useState<string>("");
-
   const isUserProfile = useMemo(
     () => post?.user?.email === session?.user?.email,
     [post, session],
   );
-
   const handleProfileClick = useCallback(() => {
     const profilePath = isUserProfile
       ? "/profile"
@@ -90,7 +87,7 @@ const PostCard = ({
             <CardItem className="mb-5 flex justify-center gap-4 rounded-b-2xl p-2 md:p-4">
               <button
                 className={cn(
-                  "rounded-3xl px-4 py-2 transition-colors duration-300 hover:text-green-600 md:px-8",
+                  "rounded-3xl px-4 py-2 text-white transition-colors duration-300 hover:text-green-600 md:px-8",
                   theme === "light" ? "bg-slate-300" : "bg-slate-700",
                 )}
                 onClick={handleEdit}
@@ -99,7 +96,7 @@ const PostCard = ({
               </button>
               <button
                 className={cn(
-                  "rounded-3xl px-4 py-2 transition-colors duration-300 hover:text-red-600 md:px-8",
+                  "rounded-3xl px-4 py-2 text-white transition-colors duration-300 hover:text-red-600 md:px-8",
                   theme === "light" ? "bg-slate-300" : "bg-slate-700",
                 )}
                 onClick={handleDelete}

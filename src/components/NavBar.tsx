@@ -9,45 +9,33 @@ import {
   Avatar,
   NavbarMenu,
   NavbarMenuToggle,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
 } from "@nextui-org/react";
 import Image from "next/image";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
-import { Sun, Moon, SunMoon } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 import { cn } from "@src/lib/utils";
 import DialogForm from "./DialogForm";
-import Link from "next/link";
 
 export default function NavBar() {
-  const [providers, setProviders] = useState<any | null>();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [showDialog, setShowDialog] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   useEffect(() => {
-    const getProvider = async () => {
-      try {
-        const res = await getProviders();
-        setProviders(res);
-      } catch (error) {
-        console.error("Error fetching providers:", error);
-      }
-    };
-    getProvider();
-  }, []);
+    // Make sure that the theme is synchronized when the component mounts
+    document.body.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   const handleSignOut = async () => {
     await signOut();
     router.replace("/");
   };
+
   const closeDialog = () => setShowDialog(!showDialog);
 
   const renderAuthButtons = () => {
@@ -64,7 +52,7 @@ export default function NavBar() {
             onClick={handleSignOut}
           >
             Sign Out
-          </button>{" "}
+          </button>
           <button
             onClick={closeDialog}
             className={cn(
@@ -84,8 +72,8 @@ export default function NavBar() {
           className={cn(
             "py-2 text-xs font-semibold transition duration-300 ease-in-out",
             theme === "light"
-              ? " text-black hover:bg-opacity-80"
-              : " text-white hover:bg-opacity-80",
+              ? "text-black hover:bg-opacity-80"
+              : "text-white hover:bg-opacity-80",
           )}
           onClick={() => signIn()}
         >
@@ -102,7 +90,6 @@ export default function NavBar() {
         className="sm:hidden"
       />
       <NavbarBrand className="items-center gap-2 sm:flex">
-        {" "}
         <Image
           src="/assets/images/logo.svg"
           alt="logo"
@@ -122,24 +109,24 @@ export default function NavBar() {
       </NavbarBrand>
 
       <NavbarContent justify="end">
-        <NavbarItem className="items-center">
-          <Dropdown className="dark:bg-black bg-white rounded-3xl text-black dark:text-white">
-            <DropdownTrigger>
-              <SunMoon />
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Theme Options">
-              <DropdownItem key="dark" onClick={() => setTheme("dark")}>
-                Dark
-              </DropdownItem>
-              <DropdownItem key="light" onClick={() => setTheme("light")}>
-                Light
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+        {/* Theme Toggle Buttons */}
+        <NavbarItem className="flex items-center">
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className={cn(
+              "rounded-full p-2 focus:outline-none",
+              theme === "light" ? "text-black" : "text-white",
+            )}
+          >
+            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+          </button>
         </NavbarItem>
+
         <NavbarItem className="hidden sm:flex">
           {renderAuthButtons()}
         </NavbarItem>
+
+        {/* Avatar */}
         <NavbarItem>
           {session?.user?.image && (
             <Avatar
@@ -152,7 +139,10 @@ export default function NavBar() {
           )}
         </NavbarItem>
       </NavbarContent>
+
+      {/* Mobile Menu for Authentication */}
       <NavbarMenu>{renderAuthButtons()}</NavbarMenu>
+
       <DialogForm open={showDialog} onClose={closeDialog} onSubmit={() => {}} />
     </Navbar>
   );
