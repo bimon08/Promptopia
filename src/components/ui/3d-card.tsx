@@ -31,12 +31,13 @@ export const CardContainer = ({
     const { left, top, width, height } =
       containerRef.current.getBoundingClientRect();
 
-    // NOTE: This is the trick!
-    const x = (e.clientX - left - width / 2) / 25;
-    // const y = (e.clientY - top - height / 2) / 25;
-    const y = (e.clientY - top - height / 1) / 10000;
+    // Even more subtle effect
+    const x = (e.clientX - left - width / 2) / 100; // Make the X-axis rotation even less intense
+    const y = (e.clientY - top - height / 2) / 500; // Make the Y-axis rotation much less intense
+
     containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
   };
+
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsMouseEntered(true);
@@ -48,15 +49,13 @@ export const CardContainer = ({
     setIsMouseEntered(false);
     containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`;
   };
+
   return (
     <MouseEnterContext.Provider value={[isMouseEntered, setIsMouseEntered]}>
       <div
-        className={cn(
-          "flex items-center justify-center",
-          containerClassName,
-        )}
+        className={cn("flex items-center justify-center", containerClassName)}
         style={{
-          perspective: "1000px",
+          perspective: "1000px", // Maintain perspective for 3D effect
         }}
       >
         <div
@@ -69,7 +68,7 @@ export const CardContainer = ({
             className,
           )}
           style={{
-            transformStyle: "preserve-3d",
+            transformStyle: "preserve-3d", // Ensure 3D transforms are preserved
           }}
         >
           {children}
@@ -89,7 +88,7 @@ export const CardBody = ({
   return (
     <div
       className={cn(
-        " [transform-style:preserve-3d]  [&>*]:[transform-style:preserve-3d]",
+        "[transform-style:preserve-3d]  [&>*]:[transform-style:preserve-3d]",
         className,
       )}
     >
@@ -126,6 +125,7 @@ export const CardItem = ({
   const handleAnimations = useCallback(() => {
     if (!ref.current) return;
     if (isMouseEntered) {
+      // Adjust the transformation to make vertical motion subtler
       ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
     } else {
       ref.current.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;

@@ -30,7 +30,7 @@ const Profile: React.FC<ProfilePropsType> = ({
 
 const closeDialog = () => {
   setIsDialogOpen(false);
-  setSelectedPost(null); // Reset selected post on dialog close
+  setSelectedPost(null); 
 };
 
  const handleEditSubmit = (postData: Partial<IPost>) => {
@@ -53,18 +53,17 @@ const closeDialog = () => {
   };
 
   return (
-
     <section className="mx-[10px] mb-20 mt-10 min-h-[80vh]">
-      <div className="container mb-40">
-        <h1 className="mb-4 text-left text-5xl font-bold md:text-7xl text-white">
+      <div className="container mb-10 flex flex-col items-center justify-center">
+        <h1 className="mx-[70px] text-center text-2xl font-bold text-white sm:mb-4 sm:text-left sm:text-5xl md:text-7xl">
           <span>{name}&apos;s Profile</span>
         </h1>
-        <p className="desc whitespace-pre-line text-left text-sm font-light leading-snug md:text-base text-white">
+        <p className="desc mx-[70px] whitespace-pre-line text-center text-sm font-light leading-snug text-white sm:text-left sm:text-2xl md:text-base">
           {desc}
         </p>
       </div>
 
-      <div className="columns-1 gap-8 sm:columns-2 mx-[70px]">
+      <div className="mx-[70px] min-h-full max-w-full columns-1 gap-8 lg:columns-2">
         {posts.map((post) => (
           <div key={post.id} className="mb-8 break-inside-avoid">
             <PostCard

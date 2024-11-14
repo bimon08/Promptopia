@@ -2,33 +2,48 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
-import Profile from "@components/Profile";
+import { toast } from "sonner";
+import Profile from "@src/components/Profile";
+import NavBar from "@src/components/NavBar";
+import { AuroraBackground } from "@src/components/ui/aurora-background";
+import { IPost } from "types/Type";
 import { ParamType } from "@src/app/api/_lib/type";
 
-const UserProfile = ({ params }: ParamType) => {
+const UserProfile: React.FC<{ params: { id: string } }> = ({ params }) => {
   const searchParams = useSearchParams();
-  const userName = searchParams.get("name");
+  const userName = searchParams.get("name") || "User";
 
-  const [userPosts, setUserPosts] = useState([]);
+  const [userPosts, setUserPosts] = useState<IPost[]>([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${params?.id}/posts`);
-      const data = await response.json();
-      console.log(data);
-      setUserPosts(data);
+      try {
+        if (!params?.id) {
+          console.log("No user ID found in params.");
+          return;
+        }
+        const response = await fetch(`/api/users/${params.id}/posts`);
+        if (!response.ok) throw new Error("Failed to fetch user posts");
+        const data = await response.json();
+        setUserPosts(data);
+      } catch (error) {
+        console.error("Error fetching user posts:", error);
+        toast.error("Failed to fetch user posts");
+      }
     };
 
     if (params?.id) fetchPosts();
-  }, [params.id]);
+  }, [params?.id]);
 
   return (
-    <Profile
-      name={userName ?? ""}
-      desc={`Welcome to ${userName}'s personalized profile page. Explore ${userName}'s exceptional messages and be inspired by the power of their imagination`}
-      posts={userPosts}
-    />
+    <AuroraBackground>
+      <NavBar />
+      <Profile
+        name={userName}
+        desc={`Welcome to ${userName}'s profile page.`}
+        posts={userPosts}
+      />
+    </AuroraBackground>
   );
 };
 

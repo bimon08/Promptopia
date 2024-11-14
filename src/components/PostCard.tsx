@@ -5,7 +5,6 @@ import { CardBody, CardContainer, CardItem } from "@src/components/ui/3d-card";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useMemo, useCallback } from "react";
-import { motion } from "framer-motion";
 import { cn } from "@src/lib/utils";
 import { useTheme } from "next-themes";
 
@@ -50,22 +49,12 @@ const PostCard = ({
   const isOwnerViewing =
     session?.user?.id === post?.user?.id && pathName === "/profile";
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 },
-  };
-
   return (
-    <motion.div
+    <div
       className={cn(
         "rounded-2xl shadow-lg transition-shadow duration-300 hover:shadow-xl",
         theme === "light" ? "bg-slate-200" : "bg-slate-800",
       )}
-      initial="hidden"
-      animate="visible"
-      variants={cardVariants}
-      transition={{ duration: 0.5 }}
-      layout
     >
       <CardContainer className="md:px-4">
         <CardBody className="relative flex h-auto flex-col items-center gap-8 rounded-2xl md:px-4">
@@ -77,10 +66,7 @@ const PostCard = ({
               handleCopy={handleCopy}
             />
           </CardItem>
-          <CardItem
-            translateZ={20}
-            className="flex flex-col items-center md:px-4"
-          >
+          <CardItem className="flex flex-col items-center md:px-4">
             <PostContent post={post} handleTagClick={handleTagClick} />
           </CardItem>
           {isOwnerViewing && (
@@ -107,7 +93,7 @@ const PostCard = ({
           )}
         </CardBody>
       </CardContainer>
-    </motion.div>
+    </div>
   );
 };
 
